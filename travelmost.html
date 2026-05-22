@@ -51,7 +51,7 @@ h1 em{color:var(--accent);font-style:normal}
 .chart-scroll::-webkit-scrollbar{width:3px}
 .chart-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-.team-row{display:grid;grid-template-columns:26px 128px 1fr 80px;align-items:center;gap:.4rem;padding:5px 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;position:relative}
+.team-row{display:grid;grid-template-columns:26px 128px 1fr 80px 16px 18px;align-items:center;gap:.4rem;padding:5px 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;position:relative}
 .team-row:hover{background:var(--surface2)}
 .team-row.selected{background:rgba(0,212,170,0.05);border-left:2px solid var(--accent);padding-left:calc(1.25rem - 2px)}
 .row-rank{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);text-align:right}
@@ -250,6 +250,68 @@ canvas#mapCanvas{display:block;width:100%;max-width:100%;background:#0d1a24}
   .conf-btn{font-size:9px;padding:3px 7px}
   .p3-btn{font-size:9px;padding:3px 6px}
 }
+
+.methodology-bar{
+  padding:.5rem 1.25rem;
+  background:rgba(255,255,255,0.02);
+  border-bottom:1px solid var(--border);
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.meth-link{color:var(--accent);text-decoration:none;white-space:nowrap}
+.meth-link:hover{text-decoration:underline}
+.meth-hint{color:rgba(255,255,255,0.35)}
+.meth-hint strong{color:rgba(255,255,255,0.55);font-weight:500}
+
+.row-map-icon{
+  font-size:10px;color:var(--muted);
+  width:16px;flex-shrink:0;
+  transition:color .15s;
+  align-self:center;
+}
+.team-row:hover .row-map-icon{color:var(--accent)}
+.team-row.selected .row-map-icon{color:var(--accent)}
+
+.row-share{
+  background:none;border:none;cursor:pointer;
+  font-size:13px;color:var(--muted);
+  width:18px;flex-shrink:0;padding:0;
+  align-self:center;transition:color .15s;
+  line-height:1;
+}
+.row-share:hover{color:var(--gold)}
+
+.page-signpost{
+  max-width:1400px;margin:2rem auto 0;
+  padding:0 2rem;
+}
+.signpost-inner{
+  border:1px solid var(--border);border-radius:4px;
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.75rem;
+  background:var(--surface);
+}
+.signpost-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:3px;
+}
+.signpost-link{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;
+  font-weight:700;color:var(--accent);text-decoration:none;
+  letter-spacing:.3px;
+}
+.signpost-link:hover{text-decoration:underline}
+.signpost-home{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;
+  font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  border:1px solid var(--border);padding:6px 14px;border-radius:2px;
+  transition:all .15s;
+}
+.signpost-home:hover{border-color:var(--accent);color:var(--text)}
 </style>
 </head>
 <body>
@@ -297,6 +359,12 @@ canvas#mapCanvas{display:block;width:100%;max-width:100%;background:#0d1a24}
       <span class="panel-title">Total tournament travel — base camp return trips for every game</span>
       <span class="panel-count" id="teamCount">48 teams</span>
     </div>
+    <div class="methodology-bar">
+      Distances are great-circle, doubled per game (each team returns to base). Expected = probability-weighted across all finishing positions using pre-tournament bookmaker odds.
+      <a href="#methodology" class="meth-link">Full methodology ↓</a>
+      &nbsp;·&nbsp;
+      <span class="meth-hint">Start: sort by <strong>Expected</strong>, then filter by confederation.</span>
+    </div>
     <div class="legend-row">
       <div class="leg-item"><div class="leg-line" style="background:var(--accent3);opacity:.7"></div>Group stage</div>
       <div class="leg-item"><div class="leg-line" style="background:rgba(0,212,170,.4);width:28px"></div>Range (elim–max)</div>
@@ -318,7 +386,16 @@ canvas#mapCanvas{display:block;width:100%;max-width:100%;background:#0d1a24}
   </div>
 </div>
 
-<div class="footnote">
+<div class="page-signpost">
+  <div class="signpost-inner">
+    <div class="signpost-text">
+      <div class="signpost-label">Also on this project</div>
+      <a class="signpost-link" href="rightcamp.html">Did teams pick the right base camp? →</a>
+    </div>
+    <a class="signpost-home" href="index.html">← Back to the full project</a>
+  </div>
+</div>
+<div id="methodology" class="footnote">
   <strong>Methodology:</strong> Distances are great-circle (haversine) between each team's confirmed base camp and each match venue, doubled for the return trip. Teams return to base between every fixture including knockout matches. For 1st and 2nd place finishers, the full bracket path through Round of 32, R16, QF, SF and Final is fixed by FIFA draw rules. For 3rd-place finishers, venues vary by which groups produce the 8 qualifying 3rd-place teams — the average is shown across all eligible bracket slots. Expected distance is probability-weighted using pre-tournament bookmaker odds (May 2026). <strong>Sources:</strong> FIFA official schedule, SportsTravel Magazine (base camps), MLS Soccer (confirmed venues), Wikipedia knockout bracket.
 </div>
 
@@ -387,6 +464,27 @@ function confColor(c){
   return m[c]||'var(--muted)';
 }
 
+function shareTeam(e,team,expectedKm,maxKm){
+  e.stopPropagation();
+  const exp=unitMiles?Math.round(expectedKm*KM_TO_MI):expectedKm;
+  const unit=unitMiles?'miles':'km';
+  const text=team+' are expected to travel '+exp.toLocaleString()+' '+unit+' during the 2026 World Cup — and up to '+
+    (unitMiles?Math.round(maxKm*KM_TO_MI):maxKm).toLocaleString()+' '+unit+' if they go all the way. theunanswered.co.uk';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=e.currentTarget;
+    btn.textContent='✓';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.innerHTML='&#x2197;';btn.style.color='';},1800);
+  }).catch(()=>{
+    // fallback: select text from a temp input
+    const inp=document.createElement('textarea');
+    inp.value=text;document.body.appendChild(inp);inp.select();
+    document.execCommand('copy');document.body.removeChild(inp);
+    const btn=e.currentTarget;
+    btn.textContent='✓';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.innerHTML='&#x2197;';btn.style.color='';},1800);
+  });
+}
+
 function renderChart(){
   const body=document.getElementById('chartBody');
   const sorted=getSorted();
@@ -408,7 +506,7 @@ function renderChart(){
         <div class="bar-gs" style="width:${gsPct}%"></div>
         <div class="bar-expected" style="left:${expPct}%"></div>
       </div>
-      <div class="row-km">${fmtK(primaryKm(t))}<span>${sortMode==='expected'?'<span class=\'has-tip\' style=\'border-bottom:1px dotted var(--muted)\'>expected<span class=\'tip\' style=\'width:190px\'>Weighted average across all possible finishing positions — not a single real journey.</span></span>':primaryLabel()}</span></div>`;
+      <div class="row-km">${fmtK(primaryKm(t))}<span>${sortMode==='expected'?'<span class=\'has-tip\' style=\'border-bottom:1px dotted var(--muted)\'>expected<span class=\'tip\' style=\'width:190px\'>Weighted average across all possible finishing positions — not a single real journey.</span></span>':primaryLabel()}</span></div><div class="row-map-icon" title="View route map">&#9654;</div><button class="row-share" title="Copy stat" onclick="shareTeam(event,'${t.team}',${t.expected_km},${t.max_km})">&#x2197;</button>`;
     row.addEventListener('click',()=>selectTeam(t));
     body.appendChild(row);
   });

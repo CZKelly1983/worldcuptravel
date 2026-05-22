@@ -87,10 +87,10 @@ h1 em{color:var(--accent);font-style:normal}
 .s-sub{font-size:10px;color:var(--muted);margin-top:3px}
 
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.table-header{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px;gap:.5rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);align-items:center}
-.t-row{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px;gap:.5rem;padding:6px 1.25rem;border-bottom:1px solid var(--border);align-items:center;transition:background .1s}
+.table-header{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px 24px;gap:.5rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);align-items:center}
+.t-row{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px 24px;gap:.5rem;padding:6px 1.25rem;border-bottom:1px solid var(--border);align-items:center;transition:background .1s}
 .t-row:hover{background:var(--surface2)}
-.t-row.perfect{opacity:.4}
+.t-row.perfect{border-left:2px solid var(--accent);padding-left:calc(1.25rem - 2px)}
 .t-row.egregious{border-left:2px solid var(--red);padding-left:calc(1.25rem - 2px)}
 .t-rank{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);text-align:right}
 .t-team{display:flex;align-items:center;gap:7px;min-width:0}
@@ -166,6 +166,54 @@ h1 em{color:var(--accent);font-style:normal}
   .t-flag{font-size:13px}
   .t-name{font-size:12px}
 }
+
+.hook-bar{
+  max-width:1100px;margin:.75rem auto 0;padding:.65rem 2rem;
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+  background:rgba(255,107,53,0.05);
+  border-top:1px solid rgba(255,107,53,0.2);
+  border-bottom:1px solid rgba(255,107,53,0.2);
+}
+.hook-stat{font-size:12px;color:var(--muted);line-height:1.4}
+.hook-stat strong{color:var(--text);font-weight:500}
+.hook-divider{color:var(--border);font-size:16px;flex-shrink:0}
+
+.row-share-rc{
+  background:none;border:none;cursor:pointer;
+  font-size:13px;color:var(--muted);padding:0;
+  align-self:center;transition:color .15s;line-height:1;
+}
+.row-share-rc:hover{color:var(--gold)}
+
+.page-signpost{
+  max-width:1100px;margin:2rem auto 0;padding:0 2rem;
+}
+.signpost-inner{
+  border:1px solid var(--border);border-radius:4px;
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.75rem;background:var(--surface);
+}
+.signpost-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;
+}
+.signpost-link{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;
+  font-weight:700;color:var(--accent);text-decoration:none;
+}
+.signpost-link:hover{text-decoration:underline}
+.signpost-home{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;
+  font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  border:1px solid var(--border);padding:6px 14px;border-radius:2px;
+  transition:all .15s;
+}
+.signpost-home:hover{border-color:var(--accent);color:var(--text)}
+@media(max-width:900px){
+  .table-header>div:nth-child(8),.t-row>div:nth-child(8){display:none}
+}
 </style>
 </head>
 <body>
@@ -186,6 +234,13 @@ h1 em{color:var(--accent);font-style:normal}
   </p>
 </header>
 
+<div class="hook-bar">
+  <span class="hook-stat">Austria left <strong>9,957&nbsp;km</strong> on the table by choosing Santa Barbara over Frisco, TX.</span>
+  <span class="hook-divider">·</span>
+  <span class="hook-stat">Portugal had no business in Florida.</span>
+  <span class="hook-divider">·</span>
+  <span class="hook-stat"><strong>6 of 48</strong> teams got it right — not necessarily by design.</span>
+</div>
 <div class="controls">
   <span class="ctrl-label">Sort by</span>
   <button class="sort-btn active" data-sort="saving">Km wasted</button>
@@ -221,6 +276,15 @@ h1 em{color:var(--accent);font-style:normal}
   </div>
 </div>
 
+<div class="page-signpost">
+  <div class="signpost-inner">
+    <div class="signpost-text">
+      <div class="signpost-label">Also on this project</div>
+      <a class="signpost-link" href="travelmost.html">Who travels the most overall? →</a>
+    </div>
+    <a class="signpost-home" href="index.html">← Back to the full project</a>
+  </div>
+</div>
 <div class="footnote">
   <strong>Methodology:</strong> For each team, expected travel was recalculated placing them at every other team's confirmed base camp. The optimal base is whichever FIFA-approved facility minimises probability-weighted travel across all group fixtures and knockout bracket paths. "Wasted" = expected distance from actual base minus expected from optimal base. Teams already at their optimal location shown at reduced opacity. Distances are great-circle, doubled for each return trip to base.
 </div>
@@ -309,8 +373,32 @@ function renderTable(){
       +'<div>'+optCell+'</div>'
       +'<div class="t-num" style="color:var(--muted)">'+fmtK(d.actual_expected)+'</div>'
       +'<div class="t-num" style="color:var(--accent)">'+fmtK(d.optimal_expected)+'</div>'
-      +'<div>'+savCell+'</div>';
+      +'<div>'+savCell+'</div>'+'<button class="row-share-rc" title="Copy stat" data-share="1">&#x2197;</button>';
+    const shareBtn=row.querySelector('.row-share-rc');
+    if(shareBtn) shareBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      shareRightcamp(e,d.team,d.saving_km,d.actual_base,d.optimal_base);
+    });
     body.appendChild(row);
+  });
+}
+
+function shareRightcamp(e,team,savingKm,actualBase,optimalBase){
+  e.stopPropagation();
+  const sav=unitMiles?Math.round(savingKm*KM_TO_MI):savingKm;
+  const unit=unitMiles?'miles':'km';
+  const text=team+' chose '+actualBase+' as their World Cup 2026 base camp. '+
+    optimalBase+' would have saved them '+sav.toLocaleString()+' '+unit+
+    ' of travel. theunanswered.co.uk/rightcamp.html';
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=e.currentTarget;btn.textContent='✓';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.innerHTML='&#x2197;';btn.style.color='';},1800);
+  }).catch(()=>{
+    const inp=document.createElement('textarea');inp.value=text;
+    document.body.appendChild(inp);inp.select();document.execCommand('copy');
+    document.body.removeChild(inp);
+    const btn=e.currentTarget;btn.textContent='✓';btn.style.color='var(--accent)';
+    setTimeout(()=>{btn.innerHTML='&#x2197;';btn.style.color='';},1800);
   });
 }
 
