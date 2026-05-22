@@ -414,6 +414,63 @@ body{
 }
 .footer-brand span{color:var(--accent)}
 .footer-note{font-size:10px;color:var(--muted)}
+
+/* ── Mobile: index.html ── */
+@media(max-width:768px){
+  .hero{padding:2rem 1.25rem 4rem}
+  .hero-kicker{font-size:10px}
+  .hero-body{font-size:.9rem}
+  .hero-ctas{flex-direction:column;align-items:flex-start}
+  .cta-primary,.cta-secondary{width:100%;justify-content:center}
+  .section{padding:2.5rem 1.25rem}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .project-cards,.about-grid{grid-template-columns:1fr}
+  .about-name{font-size:2.5rem}
+  .footer{padding:1.25rem;flex-direction:column;gap:.25rem}
+  .nav-brand{font-size:11px}
+  .nav-link{font-size:10px;padding:5px 8px;letter-spacing:.5px}
+}
+@media(max-width:480px){
+  .nav-link{display:none}
+  .nav-brand::after{content:' · WC26 Travel';color:var(--muted);font-size:10px}
+  .hero h1{font-size:3rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+}
+
+/* ── Mobile bottom nav ── */
+.mobile-bottom-nav{
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:#070a0c;
+  border-top:1px solid rgba(255,255,255,0.1);
+  padding:.75rem 1rem;
+  z-index:300;
+  gap:.5rem;
+}
+.mob-nav-btn{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 8px;
+  border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:all .15s;
+}
+.mob-nav-btn.primary{background:var(--accent);color:#000}
+.mob-nav-btn.secondary{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.mob-nav-btn.secondary:hover{border-color:var(--accent);color:var(--text)}
+@media(max-width:768px){
+  .mobile-bottom-nav{display:flex}
+  body{padding-bottom:72px}
+}
 </style>
 </head>
 <body>
@@ -435,19 +492,21 @@ body{
     <span>·</span>
     World Cup 2026
   </div>
-  <h1>The question<br>nobody<br><em>asked.</em></h1>
+  <h1>Austria flew<br>10,000km<br><em>too far.</em></h1>
   <div class="hero-body">
     <p>
-      The World Cup 2026 coverage will tell you who won, who scored, and which manager made the wrong substitution.
-      It will not tell you that <strong>some teams chose a base camp 2,000 kilometres from where the data said they should be</strong> — and what that decision cost them in the air before a ball was kicked.
+      They based themselves in Santa Barbara. They played in San Francisco, Dallas and Kansas City.
+      Of all 48 confirmed base camps at this World Cup, theirs added the most unnecessary distance
+      to their tournament — <strong>nearly 10,000km more than the optimal facility available to them.</strong>
     </p>
     <p>
-      The question isn't who travels the most. It's what the travel reveals about decisions made under conditions nobody analysed properly.
+      Portugal, Uruguay, England. All made the same kind of trade: good facilities, wrong location.
+      The data can't tell you whether the facilities were worth it.
+      It can tell you exactly what the choice cost.
     </p>
   </div>
   <div class="hero-ctas">
-    <a class="cta-primary" href="travelmost.html">Who travels most? →</a>
-    <a class="cta-secondary" href="rightcamp.html">Right base camp?</a>
+    <a class="cta-primary" href="travelmost.html">Explore the travel data →</a>
   </div>
   <div class="scroll-hint">Scroll</div>
 </section>
@@ -466,19 +525,25 @@ body{
       That's the instrument. Define it first. Then see what it shows you.
     </p>
     <p>
-      What it shows you is that <em>Austria</em> — playing in San Francisco, Dallas and Kansas City — based themselves in Santa Barbara, California, adding nearly <em>10,000 km</em> to their expected tournament travel compared to the optimal choice available. That Portugal put their camp in Palm Beach, Florida, for a schedule that pointed north and west.
-      That France, somehow, got almost everything right.
+      What it shows you is that <em>Austria</em> — playing in San Francisco, Dallas and Kansas City — based themselves in Santa Barbara and added nearly <em>10,000 km</em> to their expected travel compared to the optimal facility available to them. That Portugal put their camp in Palm Beach for a schedule that pointed north and west. That France, somehow, got almost everything right.
     </p>
     <p>
-      None of this is in the pre-tournament analysis. It wasn't the question anyone was asking. That's the point.
+      None of this answers whether those choices were wrong. Teams weren't picking bases on distance alone. They were weighing facility quality, climate, familiarity, privacy, sponsor logistics, proximity to airports. <strong>The data can measure what the choice cost. It can't measure what it was worth.</strong>
+    </p>
+    <p>
+      And the six teams that ended up at their statistically optimal base? They aren't necessarily the smartest planners. They may simply have had fewer options — or their fixtures happened to cluster near the best facility available. The absence of a trade-off isn't always a decision.
     </p>
   </div>
 
+  <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:var(--accent);letter-spacing:-.01em;margin:1.75rem 0;line-height:1.2;max-width:480px">
+    Are good facilities the price of distance?<br>
+    <span style="font-size:.95rem;font-weight:400;color:var(--muted);font-family:'Barlow',sans-serif;letter-spacing:0">The data can only answer half that question.</span>
+  </p>
   <div class="stats-row">
-    <div class="stat-cell"><div class="stat-n">48</div><div class="stat-desc">Teams, all base camps confirmed</div></div>
-    <div class="stat-cell"><div class="stat-n">16</div><div class="stat-desc">Host cities across 3 countries</div></div>
-    <div class="stat-cell"><div class="stat-n">495</div><div class="stat-desc">Possible 3rd-place bracket combinations</div></div>
-    <div class="stat-cell"><div class="stat-n">6</div><div class="stat-desc">Teams already at their optimal base</div></div>
+    <div class="stat-cell"><div class="stat-n">48</div><div class="stat-desc">Teams — every confirmed base camp included before the analysis ran</div></div>
+    <div class="stat-cell"><div class="stat-n">16</div><div class="stat-desc">Host cities across the US, Canada &amp; Mexico — wider than any previous tournament</div></div>
+    <div class="stat-cell"><div class="stat-n">495</div><div class="stat-desc">Possible 3rd-place bracket draws — each one puts a different team in a different city, changing the route</div></div>
+    <div class="stat-cell"><div class="stat-n">6 / 48</div><div class="stat-desc">Teams whose actual base was also the optimal one — not necessarily by design</div></div>
   </div>
 </section>
 
@@ -496,7 +561,7 @@ body{
     <a class="project-card" href="travelmost.html">
       <div class="card-num">Question 01</div>
       <div class="card-title">Who travels the most?</div>
-      <div class="card-q">"The gap between the luckiest and unluckiest team is wider than you think."</div>
+      <div class="card-q">"Jordan's worst-case route is further than London to Sydney and back — twice."</div>
       <div class="card-desc">
         Every team's expected travel distance, calculated from confirmed base camps across all group stage fixtures and every possible knockout path — weighted by the probability of finishing 1st, 2nd or 3rd. Sortable. Filterable. With a live route map for each team's three possible journeys.
       </div>
@@ -523,6 +588,7 @@ body{
     <div>
       <div class="about-name">Chris<br>Kelly</div>
       <div class="about-role">Fractional CPO &amp; CTO · Glasgow</div>
+      <p style="font-size:.85rem;color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:.3px;margin-bottom:1rem;font-style:italic;">I build data instruments for a living. This is what happens when I point one at the World Cup.</p>
       <div class="section-body">
         <p>
           The Sandbox is where the same methodology runs without a client brief. No commercial outcome. No softening. The question is defined, the instrument is built, and whatever it shows — it shows.
@@ -559,5 +625,9 @@ body{
   <span class="footer-note">World Cup 2026 · Sandbox project · Glasgow</span>
 </footer>
 
+<div class="mobile-bottom-nav">
+  <a class="mob-nav-btn primary" href="travelmost.html">Who travels most?</a>
+  <a class="mob-nav-btn secondary" href="rightcamp.html">Right base camp?</a>
+</div>
 </body>
 </html>
