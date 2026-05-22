@@ -76,9 +76,20 @@ h1 em{color:var(--accent);font-style:normal}
 .unit-btn{background:var(--surface);border:1px solid rgba(255,255,255,0.2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;border-radius:2px;transition:all .15s;margin-left:8px}
 .unit-btn:hover{border-color:var(--accent);color:var(--text)}
 
-.main{max-width:1100px;margin:1.25rem auto 0;padding:0 2rem 4rem}
+
 
 .summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.hook-bar{
+  max-width:1100px;margin:.75rem auto 0;padding:.65rem 2rem;
+  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+  background:rgba(255,107,53,0.05);
+  border-top:1px solid rgba(255,107,53,0.2);
+  border-bottom:1px solid rgba(255,107,53,0.2);
+}
+.hook-stat{color:var(--muted);font-size:12px;line-height:1.4}
+.hook-stat strong{color:var(--text);font-weight:500}
+.hook-divider{color:rgba(255,255,255,0.15);font-size:18px;flex-shrink:0}
+
 @media(max-width:700px){.summary-cards{grid-template-columns:repeat(2,1fr)}}
 .s-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.9rem 1rem}
 .s-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif}
@@ -87,9 +98,10 @@ h1 em{color:var(--accent);font-style:normal}
 .s-sub{font-size:10px;color:var(--muted);margin-top:3px}
 
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.table-header{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px 24px;gap:.5rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);align-items:center}
-.t-row{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px 24px;gap:.5rem;padding:6px 1.25rem;border-bottom:1px solid var(--border);align-items:center;transition:background .1s}
+.table-header{display:grid;grid-template-columns:28px 160px 1fr 1fr 110px 24px;gap:.5rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);align-items:center}
+.t-row{display:grid;grid-template-columns:28px 160px 1fr 1fr 110px 24px;gap:.5rem;padding:6px 1.25rem;border-bottom:1px solid var(--border);align-items:center;transition:background .1s}
 .t-row:hover{background:var(--surface2)}
+.t-row.t-selected{background:rgba(0,212,170,0.05);border-left:2px solid var(--accent);padding-left:calc(1.25rem - 2px)}
 .t-row.perfect{border-left:2px solid var(--accent);padding-left:calc(1.25rem - 2px)}
 .t-row.egregious{border-left:2px solid var(--red);padding-left:calc(1.25rem - 2px)}
 .t-rank{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);text-align:right}
@@ -120,99 +132,86 @@ h1 em{color:var(--accent);font-style:normal}
 .conf-btn[data-conf="OFC"].active{color:var(--text)}
 
 /* ── Mobile: rightcamp.html ── */
-@media(max-width:900px){
+@media(max-width:960px){
+  .main{grid-template-columns:1fr;padding:0 1.25rem 2rem}
+  .map-panel-rc{position:static;order:2}
+  .main-left{order:1}
+}
+@media(max-width:768px){
   .header{padding:1.5rem 1rem 1.5rem}
-  .main{padding:0 1rem 3rem}
-  .controls{padding:0 1rem;gap:.35rem}
+  .main{padding:0 .75rem 2rem}
+  .controls{padding:0 .75rem;gap:.35rem;flex-wrap:wrap}
   .unit-btn{display:none}
   .ctrl-label{display:none}
   .conf-divider{display:none}
-  .conf-btn{font-size:10px;padding:4px 8px;letter-spacing:.3px}
+  .conf-btn{font-size:10px;padding:4px 8px}
   .sort-btn{font-size:11px;padding:5px 10px}
-  /* 7-col → 5-col: hide "Actual exp." and "Optimal exp." columns */
-  .table-header{grid-template-columns:22px 140px 1fr 1fr 90px}
-  .t-row{grid-template-columns:22px 140px 1fr 1fr 90px;padding:6px .75rem}
-  /* Hide the two numeric exp columns (cols 5+6) */
+  .hook-bar{padding:.65rem .75rem}
+  .hook-stat{font-size:11px}
+  .summary-cards{grid-template-columns:repeat(2,1fr)}
+  .page-signpost{padding:0 .75rem}
+  .table-header{grid-template-columns:22px 120px 1fr 1fr;gap:.3rem;padding:.5rem .75rem}
+  .t-row{grid-template-columns:22px 120px 1fr 1fr;gap:.3rem;padding:5px .75rem}
   .table-header>div:nth-child(5),
   .table-header>div:nth-child(6),
   .t-row>div:nth-child(5),
   .t-row>div:nth-child(6){display:none}
-  .summary-cards{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:600px){
-  /* 5-col → 4-col: hide "Optimal base" column, just show actual + wasted */
-  .table-header{grid-template-columns:22px 1fr 1fr 80px}
-  .t-row{grid-template-columns:22px 1fr 1fr 80px;padding:5px .6rem;gap:.25rem}
-  /* Hide optimal base column (col 4) */
-  .table-header>div:nth-child(4),
-  .t-row>div:nth-child(4){display:none}
-  .t-name{font-size:13px}
+@media(max-width:520px){
+  .table-header{grid-template-columns:20px 1fr 90px}
+  .t-row{grid-template-columns:20px 1fr 90px;padding:5px .6rem}
+  .table-header>div:nth-child(3),
+  .t-row>div:nth-child(3){display:none}
+  .t-name{font-size:12px}
   .t-code{display:none}
   .t-base{font-size:11px}
-  .t-num{font-size:12px}
   .t-pct{display:none}
-  .badge-optimal{font-size:8px;padding:1px 5px}
   .summary-cards{grid-template-columns:1fr 1fr}
   .s-val{font-size:18px}
   .saving-bar-wrap{display:none}
-}
-@media(max-width:400px){
-  /* Absolute minimum: flag + name + wasted */
-  .table-header{grid-template-columns:20px 1fr 75px}
-  .t-row{grid-template-columns:20px 1fr 75px}
-  /* Hide actual base col (col 3) */
-  .table-header>div:nth-child(3),
-  .t-row>div:nth-child(3){display:none}
-  .t-flag{font-size:13px}
-  .t-name{font-size:12px}
+  .rc-legend{gap:.5rem;padding:.4rem .75rem}
+  .badge-optimal{font-size:8px;padding:1px 5px}
 }
 
-.hook-bar{
-  max-width:1100px;margin:.75rem auto 0;padding:.65rem 2rem;
-  display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
-  background:rgba(255,107,53,0.05);
-  border-top:1px solid rgba(255,107,53,0.2);
-  border-bottom:1px solid rgba(255,107,53,0.2);
+/* rightcamp map panel */
+.main{max-width:1100px;margin:1.25rem auto 0;padding:0 2rem 0;display:grid;grid-template-columns:1fr 380px;gap:1.25rem;align-items:start}
+.main-left{min-width:0}
+.map-panel-rc{
+  position:sticky;top:1.25rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;
 }
-.hook-stat{font-size:12px;color:var(--muted);line-height:1.4}
-.hook-stat strong{color:var(--text);font-weight:500}
-.hook-divider{color:var(--border);font-size:16px;flex-shrink:0}
-
-.row-share-rc{
-  background:none;border:none;cursor:pointer;
-  font-size:13px;color:var(--muted);padding:0;
-  align-self:center;transition:color .15s;line-height:1;
+.map-placeholder-rc{
+  height:260px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:.75rem;color:var(--muted);font-size:12px;
+  background:#0d1a24;
 }
-.row-share-rc:hover{color:var(--gold)}
-
-.page-signpost{
-  max-width:1100px;margin:2rem auto 0;padding:0 2rem;
+.rc-map-detail{
+  padding:.85rem 1.1rem;border-top:1px solid var(--border);
+  font-size:12px;
 }
-.signpost-inner{
-  border:1px solid var(--border);border-radius:4px;
-  padding:1rem 1.5rem;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:.75rem;background:var(--surface);
+.rc-detail-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;
+  font-weight:900;text-transform:uppercase;margin-bottom:.4rem;
+  display:flex;align-items:center;gap:8px;
 }
-.signpost-label{
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;
-  letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;
+.rc-detail-row{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:.5rem;
+  padding:4px 0;border-bottom:1px solid var(--border);
+  font-size:11px;
 }
-.signpost-link{
-  font-family:'Barlow Condensed',sans-serif;font-size:16px;
-  font-weight:700;color:var(--accent);text-decoration:none;
-}
-.signpost-link:hover{text-decoration:underline}
-.signpost-home{
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;
-  font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  color:var(--muted);text-decoration:none;
-  border:1px solid var(--border);padding:6px 14px;border-radius:2px;
-  transition:all .15s;
-}
-.signpost-home:hover{border-color:var(--accent);color:var(--text)}
+.rc-detail-row:last-child{border:none}
+.rc-detail-label{color:var(--muted);flex-shrink:0}
+.rc-detail-val{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600}
+.rc-legend{display:flex;gap:1rem;padding:.5rem 1.1rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.rc-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+.rc-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 @media(max-width:900px){
-  .table-header>div:nth-child(8),.t-row>div:nth-child(8){display:none}
+  .main{grid-template-columns:1fr}
+  .map-panel-rc{position:static;order:2}
+  .main-left{order:1}
 }
 </style>
 </head>
@@ -261,21 +260,35 @@ h1 em{color:var(--accent);font-style:normal}
 </div>
 
 <div class="main">
-  <div class="summary-cards" id="summaryCards"></div>
-  <div class="table-wrap">
-    <div class="table-header">
-      <div></div>
-      <div>Team</div>
-      <div>Actual base chosen</div>
-      <div>Optimal base</div>
-      <div style="text-align:right">Actual exp.</div>
-      <div style="text-align:right">Optimal exp.</div>
-      <div style="text-align:right">Wasted</div>
+  <div class="main-left">
+    <div class="summary-cards" id="summaryCards"></div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <div></div>
+        <div>Team</div>
+        <div>Actual base</div>
+        <div>Optimal base</div>
+        <div style="text-align:right">Wasted</div>
+        <div></div>
+      </div>
+      <div id="tableBody"></div>
     </div>
-    <div id="tableBody"></div>
+  </div>
+  <div class="map-panel-rc" id="mapPanelRc">
+    <div class="panel-header"><span class="panel-title">Location map</span></div>
+    <div class="rc-legend">
+      <div class="rc-leg-item"><div class="rc-leg-dot" style="background:rgba(200,200,200,0.7)"></div>Actual base</div>
+      <div class="rc-leg-item"><div class="rc-leg-dot" style="background:#00d4aa"></div>Optimal base</div>
+      <div class="rc-leg-item"><div class="rc-leg-dot" style="background:rgba(255,255,255,0.4)"></div>Group fixtures</div>
+    </div>
+    <div class="map-placeholder-rc" id="mapPlaceholderRc">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+      <span>Click any team to compare locations</span>
+    </div>
+    <canvas id="rcMapCanvas" width="380" height="260" style="display:none;width:100%;background:#0d1a24"></canvas>
+    <div class="rc-map-detail" id="rcMapDetail" style="display:none"></div>
   </div>
 </div>
-
 <div class="page-signpost">
   <div class="signpost-inner">
     <div class="signpost-text">
@@ -371,9 +384,12 @@ function renderTable(){
       +'<div class="t-code">'+d.code+' GRP '+d.group+'</div></div></div>'
       +'<div><span class="t-base actual">'+d.actual_base+'</span></div>'
       +'<div>'+optCell+'</div>'
-      +'<div class="t-num" style="color:var(--muted)">'+fmtK(d.actual_expected)+'</div>'
-      +'<div class="t-num" style="color:var(--accent)">'+fmtK(d.optimal_expected)+'</div>'
       +'<div>'+savCell+'</div>'+'<button class="row-share-rc" title="Copy stat" data-share="1">&#x2197;</button>';
+    row.addEventListener('click',()=>{
+      document.querySelectorAll('.t-row').forEach(r=>r.classList.remove('t-selected'));
+      row.classList.add('t-selected');
+      renderRcMap(d);
+    });
     const shareBtn=row.querySelector('.row-share-rc');
     if(shareBtn) shareBtn.addEventListener('click',e=>{
       e.stopPropagation();
@@ -420,6 +436,145 @@ document.querySelectorAll('.conf-btn').forEach(btn=>{
     render();
   });
 });
+
+// ── Rightcamp map ────────────────────────────────────────────────────────
+const FIXTURES={"Canada":{"fixtures":[{"opponent":"Bosnia","city":"Toronto"},{"opponent":"Qatar","city":"Vancouver"},{"opponent":"Switzerland","city":"Vancouver"}],"base_coords":[49.2827,-123.1207],"base_camp":"Vancouver BC"},"Portugal":{"fixtures":[{"opponent":"DR Congo","city":"Houston"},{"opponent":"Uzbekistan","city":"Houston"},{"opponent":"Colombia","city":"Miami"}],"base_coords":[26.7153,-80.0534],"base_camp":"Palm Beach FL"},"Austria":{"fixtures":[{"opponent":"Jordan","city":"San Francisco"},{"opponent":"Argentina","city":"Dallas"},{"opponent":"Algeria","city":"Kansas City"}],"base_coords":[34.4208,-119.6982],"base_camp":"Santa Barbara CA"},"Bosnia":{"fixtures":[{"opponent":"Canada","city":"Toronto"},{"opponent":"Switzerland","city":"Los Angeles"},{"opponent":"Qatar","city":"Seattle"}],"base_coords":[40.5649,-111.8389],"base_camp":"Sandy UT"},"Belgium":{"fixtures":[{"opponent":"Egypt","city":"Seattle"},{"opponent":"Iran","city":"Los Angeles"},{"opponent":"New Zealand","city":"Vancouver"}],"base_coords":[47.4829,-122.2171],"base_camp":"Renton WA"},"Colombia":{"fixtures":[{"opponent":"Uzbekistan","city":"Mexico City"},{"opponent":"DR Congo","city":"Guadalajara"},{"opponent":"Portugal","city":"Miami"}],"base_coords":[20.6597,-103.3496],"base_camp":"Guadalajara MX"},"USA":{"fixtures":[{"opponent":"Paraguay","city":"Los Angeles"},{"opponent":"Australia","city":"Seattle"},{"opponent":"Türkiye","city":"Los Angeles"}],"base_coords":[33.6846,-117.8265],"base_camp":"Irvine CA"},"Switzerland":{"fixtures":[{"opponent":"Qatar","city":"San Francisco"},{"opponent":"Bosnia","city":"Los Angeles"},{"opponent":"Canada","city":"Vancouver"}],"base_coords":[32.7157,-117.1611],"base_camp":"San Diego CA"},"Uruguay":{"fixtures":[{"opponent":"Saudi Arabia","city":"Miami"},{"opponent":"Cape Verde","city":"Miami"},{"opponent":"Spain","city":"Guadalajara"}],"base_coords":[20.6296,-87.0739],"base_camp":"Playa del Carmen MX"},"England":{"fixtures":[{"opponent":"Croatia","city":"Dallas"},{"opponent":"Ghana","city":"Boston"},{"opponent":"Panama","city":"New York"}],"base_coords":[39.0997,-94.5786],"base_camp":"Kansas City MO"},"Australia":{"fixtures":[{"opponent":"Türkiye","city":"Vancouver"},{"opponent":"USA","city":"Seattle"},{"opponent":"Paraguay","city":"San Francisco"}],"base_coords":[37.7652,-122.2416],"base_camp":"Alameda CA"},"South Africa":{"fixtures":[{"opponent":"Mexico","city":"Mexico City"},{"opponent":"Czechia","city":"Atlanta"},{"opponent":"South Korea","city":"Monterrey"}],"base_coords":[20.1011,-98.7591],"base_camp":"Pachuca MX"},"New Zealand":{"fixtures":[{"opponent":"Iran","city":"Los Angeles"},{"opponent":"Egypt","city":"Vancouver"},{"opponent":"Belgium","city":"Vancouver"}],"base_coords":[32.7157,-117.1611],"base_camp":"San Diego CA"},"Paraguay":{"fixtures":[{"opponent":"USA","city":"Los Angeles"},{"opponent":"Türkiye","city":"San Francisco"},{"opponent":"Australia","city":"San Francisco"}],"base_coords":[37.3382,-121.8863],"base_camp":"San Jose CA"},"Jordan":{"fixtures":[{"opponent":"Austria","city":"San Francisco"},{"opponent":"Algeria","city":"San Francisco"},{"opponent":"Argentina","city":"Dallas"}],"base_coords":[45.5051,-122.675],"base_camp":"Portland OR"},"Qatar":{"fixtures":[{"opponent":"Switzerland","city":"San Francisco"},{"opponent":"Canada","city":"Vancouver"},{"opponent":"Bosnia","city":"Seattle"}],"base_coords":[34.4208,-119.6982],"base_camp":"Santa Barbara CA"},"Iran":{"fixtures":[{"opponent":"New Zealand","city":"Los Angeles"},{"opponent":"Belgium","city":"Los Angeles"},{"opponent":"Egypt","city":"Seattle"}],"base_coords":[32.2226,-110.9747],"base_camp":"Tucson AZ"},"Egypt":{"fixtures":[{"opponent":"Belgium","city":"Seattle"},{"opponent":"New Zealand","city":"Vancouver"},{"opponent":"Iran","city":"Seattle"}],"base_coords":[47.6588,-117.426],"base_camp":"Spokane WA"},"Mexico":{"fixtures":[{"opponent":"South Africa","city":"Mexico City"},{"opponent":"South Korea","city":"Guadalajara"},{"opponent":"Czechia","city":"Mexico City"}],"base_coords":[19.4326,-99.1332],"base_camp":"Mexico City"},"Spain":{"fixtures":[{"opponent":"Cape Verde","city":"Atlanta"},{"opponent":"Saudi Arabia","city":"Atlanta"},{"opponent":"Uruguay","city":"Guadalajara"}],"base_coords":[35.0456,-85.3097],"base_camp":"Chattanooga TN"},"Türkiye":{"fixtures":[{"opponent":"Australia","city":"Vancouver"},{"opponent":"Paraguay","city":"San Francisco"},{"opponent":"USA","city":"Los Angeles"}],"base_coords":[33.4152,-111.8315],"base_camp":"Mesa AZ"},"Netherlands":{"fixtures":[{"opponent":"Japan","city":"Dallas"},{"opponent":"Sweden","city":"Houston"},{"opponent":"Tunisia","city":"Kansas City"}],"base_coords":[39.0997,-94.5786],"base_camp":"Kansas City MO"},"Japan":{"fixtures":[{"opponent":"Netherlands","city":"Dallas"},{"opponent":"Tunisia","city":"Monterrey"},{"opponent":"Sweden","city":"Dallas"}],"base_coords":[36.1627,-86.7816],"base_camp":"Nashville TN"},"Curaçao":{"fixtures":[{"opponent":"Germany","city":"Houston"},{"opponent":"Ecuador","city":"Kansas City"},{"opponent":"Ivory Coast","city":"Philadelphia"}],"base_coords":[26.3683,-80.1289],"base_camp":"Boca Raton FL"},"Croatia":{"fixtures":[{"opponent":"England","city":"Dallas"},{"opponent":"Panama","city":"Toronto"},{"opponent":"Ghana","city":"Philadelphia"}],"base_coords":[38.8048,-77.0469],"base_camp":"Alexandria VA"},"South Korea":{"fixtures":[{"opponent":"Czechia","city":"Guadalajara"},{"opponent":"Mexico","city":"Guadalajara"},{"opponent":"South Africa","city":"Monterrey"}],"base_coords":[20.6597,-103.3496],"base_camp":"Guadalajara MX"},"Germany":{"fixtures":[{"opponent":"Curaçao","city":"Houston"},{"opponent":"Ivory Coast","city":"Toronto"},{"opponent":"Ecuador","city":"New York"}],"base_coords":[36.0999,-80.2442],"base_camp":"Winston-Salem NC"},"Brazil":{"fixtures":[{"opponent":"Morocco","city":"New York"},{"opponent":"Haiti","city":"Philadelphia"},{"opponent":"Scotland","city":"Miami"}],"base_coords":[40.7068,-74.5712],"base_camp":"Basking Ridge NJ"},"Saudi Arabia":{"fixtures":[{"opponent":"Uruguay","city":"Miami"},{"opponent":"Spain","city":"Atlanta"},{"opponent":"Cape Verde","city":"Houston"}],"base_coords":[30.2672,-97.7431],"base_camp":"Austin TX"},"Czechia":{"fixtures":[{"opponent":"South Korea","city":"Guadalajara"},{"opponent":"South Africa","city":"Atlanta"},{"opponent":"Mexico","city":"Mexico City"}],"base_coords":[32.5632,-97.1417],"base_camp":"Mansfield TX"},"Argentina":{"fixtures":[{"opponent":"Algeria","city":"Kansas City"},{"opponent":"Austria","city":"Dallas"},{"opponent":"Jordan","city":"Dallas"}],"base_coords":[39.0997,-94.5786],"base_camp":"Kansas City MO"},"Morocco":{"fixtures":[{"opponent":"Brazil","city":"New York"},{"opponent":"Scotland","city":"Boston"},{"opponent":"Haiti","city":"Atlanta"}],"base_coords":[40.7068,-74.5712],"base_camp":"Basking Ridge NJ"},"Algeria":{"fixtures":[{"opponent":"Argentina","city":"Kansas City"},{"opponent":"Jordan","city":"San Francisco"},{"opponent":"Austria","city":"Kansas City"}],"base_coords":[38.9717,-95.2353],"base_camp":"Lawrence KS"},"Ecuador":{"fixtures":[{"opponent":"Ivory Coast","city":"Philadelphia"},{"opponent":"Curaçao","city":"Kansas City"},{"opponent":"Germany","city":"New York"}],"base_coords":[39.9612,-82.9988],"base_camp":"Columbus OH"},"DR Congo":{"fixtures":[{"opponent":"Portugal","city":"Houston"},{"opponent":"Colombia","city":"Guadalajara"},{"opponent":"Uzbekistan","city":"Atlanta"}],"base_coords":[29.7604,-95.3698],"base_camp":"Houston TX"},"Ghana":{"fixtures":[{"opponent":"Panama","city":"Toronto"},{"opponent":"England","city":"Boston"},{"opponent":"Croatia","city":"Philadelphia"}],"base_coords":[41.9001,-71.5523],"base_camp":"Smithfield RI"},"Scotland":{"fixtures":[{"opponent":"Haiti","city":"Boston"},{"opponent":"Morocco","city":"Boston"},{"opponent":"Brazil","city":"Miami"}],"base_coords":[35.2271,-80.8431],"base_camp":"Charlotte NC"},"Sweden":{"fixtures":[{"opponent":"Tunisia","city":"Monterrey"},{"opponent":"Netherlands","city":"Houston"},{"opponent":"Japan","city":"Dallas"}],"base_coords":[33.1581,-96.8236],"base_camp":"Frisco TX"},"Uzbekistan":{"fixtures":[{"opponent":"Colombia","city":"Mexico City"},{"opponent":"Portugal","city":"Houston"},{"opponent":"DR Congo","city":"Atlanta"}],"base_coords":[33.9526,-84.5499],"base_camp":"Marietta GA"},"France":{"fixtures":[{"opponent":"Senegal","city":"New York"},{"opponent":"Iraq","city":"Philadelphia"},{"opponent":"Norway","city":"Boston"}],"base_coords":[42.3765,-71.2356],"base_camp":"Waltham MA"},"Tunisia":{"fixtures":[{"opponent":"Sweden","city":"Monterrey"},{"opponent":"Japan","city":"Monterrey"},{"opponent":"Netherlands","city":"Kansas City"}],"base_coords":[25.6866,-100.3161],"base_camp":"Monterrey MX"},"Norway":{"fixtures":[{"opponent":"Iraq","city":"Boston"},{"opponent":"Senegal","city":"New York"},{"opponent":"France","city":"Boston"}],"base_coords":[36.0726,-79.792],"base_camp":"Greensboro NC"},"Cape Verde":{"fixtures":[{"opponent":"Spain","city":"Atlanta"},{"opponent":"Uruguay","city":"Miami"},{"opponent":"Saudi Arabia","city":"Houston"}],"base_coords":[27.9506,-82.4572],"base_camp":"Tampa FL"},"Iraq":{"fixtures":[{"opponent":"Norway","city":"Boston"},{"opponent":"France","city":"Philadelphia"},{"opponent":"Senegal","city":"Toronto"}],"base_coords":[37.7979,-80.3023],"base_camp":"White Sulphur Springs WV"},"Senegal":{"fixtures":[{"opponent":"France","city":"New York"},{"opponent":"Norway","city":"New York"},{"opponent":"Iraq","city":"Toronto"}],"base_coords":[40.4993,-74.4496],"base_camp":"Piscataway NJ"},"Haiti":{"fixtures":[{"opponent":"Scotland","city":"Boston"},{"opponent":"Brazil","city":"Philadelphia"},{"opponent":"Morocco","city":"Atlanta"}],"base_coords":[39.4773,-74.4728],"base_camp":"Galloway NJ"},"Ivory Coast":{"fixtures":[{"opponent":"Ecuador","city":"Philadelphia"},{"opponent":"Germany","city":"Toronto"},{"opponent":"Curaçao","city":"Philadelphia"}],"base_coords":[39.9526,-75.1652],"base_camp":"Philadelphia PA"},"Panama":{"fixtures":[{"opponent":"Ghana","city":"Toronto"},{"opponent":"Croatia","city":"Toronto"},{"opponent":"England","city":"New York"}],"base_coords":[44.0753,-79.8428],"base_camp":"New Tecumseth ON"}};
+const VENUES_RC={"Mexico City":[19.4326,-99.1332],"Guadalajara":[20.6597,-103.3496],"Monterrey":[25.6866,-100.3161],"Los Angeles":[34.0143,-118.2912],"Seattle":[47.5952,-122.3316],"San Francisco":[37.4031,-121.9694],"Vancouver":[49.2769,-123.112],"Toronto":[43.6332,-79.4194],"Kansas City":[39.0489,-94.4839],"Dallas":[32.7473,-97.0945],"Houston":[29.6847,-95.4107],"Atlanta":[33.7554,-84.4009],"New York":[40.8136,-74.0744],"Philadelphia":[39.9008,-75.1675],"Miami":[25.958,-80.2389],"Boston":[42.0909,-71.2643]};
+const RC_MAP_W=380,RC_MAP_H=260;
+const RC_LON_MIN=-130,RC_LON_MAX=-60,RC_LAT_MIN=14,RC_LAT_MAX=55;
+
+function rcProj(lat,lon,w,h){
+  w=w||RC_MAP_W;h=h||RC_MAP_H;
+  return[((lon-RC_LON_MIN)/(RC_LON_MAX-RC_LON_MIN))*w,
+         h-((lat-RC_LAT_MIN)/(RC_LAT_MAX-RC_LAT_MIN))*h];
+}
+function rcGc(city){
+  for(const[k,v]of Object.entries(VENUES_RC))
+    if(k.toLowerCase().includes(city.toLowerCase())||city.toLowerCase().includes(k.toLowerCase()))return v;
+  return null;
+}
+
+function renderRcMap(d){
+  const ph=document.getElementById('mapPlaceholderRc');
+  const cv=document.getElementById('rcMapCanvas');
+  ph.style.display='none';cv.style.display='block';
+  const dpr=window.devicePixelRatio||1;
+  const cw=cv.parentElement.clientWidth||RC_MAP_W;
+  const rw=Math.min(RC_MAP_W,cw),rh=Math.round(rw*(RC_MAP_H/RC_MAP_W));
+  cv.width=rw*dpr;cv.height=rh*dpr;
+  cv.style.width=rw+'px';cv.style.height=rh+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.fillStyle='#0d1a24';ctx.fillRect(0,0,rw,rh);
+
+  // Land outline
+  function rp(lat,lon){return rcProj(lat,lon,rw,rh);}
+  ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.setLineDash([]);
+  [[[-124.8,49],[-110,49],[-100,49],[-75,45],[-67,47]],
+   [[-117,32.5],[-111,31.3],[-104.5,29.5],[-99.5,26.5],[-97,26]]].forEach(pts=>{
+    ctx.beginPath();
+    pts.forEach(([lon,lat],i)=>{const[x,y]=rp(lat,lon);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+    ctx.stroke();
+  });
+
+  // Venue dots (faint)
+  for(const[,v]of Object.entries(VENUES_RC)){
+    const[x,y]=rp(v[0],v[1]);
+    ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fill();
+  }
+
+  const fx=FIXTURES[d.team];
+  if(!fx)return;
+
+  // Draw fixture venues
+  const fxCities=[...new Set(fx.fixtures.map(f=>f.city))];
+  fxCities.forEach(city=>{
+    const vc=rcGc(city);if(!vc)return;
+    const[vx,vy]=rp(vc[0],vc[1]);
+    ctx.beginPath();ctx.arc(vx,vy,5,0,Math.PI*2);
+    ctx.fillStyle='#1a2e3a';ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.65)';ctx.font='8px Barlow,sans-serif';
+    ctx.fillText(city,vx+6,vy+3);
+  });
+
+  // Lines: actual base → fixtures (grey)
+  const ab=fx.base_coords;
+  const[abx,aby]=rp(ab[0],ab[1]);
+  fxCities.forEach(city=>{
+    const vc=rcGc(city);if(!vc)return;
+    const[vx,vy]=rp(vc[0],vc[1]);
+    ctx.beginPath();ctx.moveTo(abx,aby);ctx.lineTo(vx,vy);
+    ctx.strokeStyle='rgba(200,200,200,0.25)';ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Lines: optimal base → fixtures (teal)
+  const ob=d.optimal_coords;
+  const[obx,oby]=rp(ob[0],ob[1]);
+  if(!d.is_optimal){
+    fxCities.forEach(city=>{
+      const vc=rcGc(city);if(!vc)return;
+      const[vx,vy]=rp(vc[0],vc[1]);
+      ctx.beginPath();ctx.moveTo(obx,oby);ctx.lineTo(vx,vy);
+      ctx.strokeStyle='rgba(0,212,170,0.4)';ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  }
+
+  // Line between bases
+  if(!d.is_optimal){
+    ctx.beginPath();ctx.moveTo(abx,aby);ctx.lineTo(obx,oby);
+    ctx.strokeStyle='rgba(240,192,64,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([2,3]);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Actual base dot (white/grey)
+  ctx.beginPath();ctx.arc(abx,aby,6,0,Math.PI*2);
+  ctx.fillStyle=d.is_optimal?'#00d4aa':'rgba(200,200,200,0.9)';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.fillStyle=d.is_optimal?'#00d4aa':'rgba(255,255,255,0.8)';
+  ctx.font='bold 8px Barlow Condensed,sans-serif';
+  ctx.fillText(d.is_optimal?'BASE ✓':'BASE',abx+8,aby-2);
+
+  // Optimal base dot (teal) - only if different
+  if(!d.is_optimal){
+    ctx.beginPath();ctx.arc(obx,oby,6,0,Math.PI*2);
+    ctx.fillStyle='#00d4aa';ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='#00d4aa';ctx.font='bold 8px Barlow Condensed,sans-serif';
+    ctx.fillText('OPTIMAL',obx+8,oby-2);
+  }
+
+  // Legend
+  const legs=[
+    {col:'rgba(200,200,200,0.7)',lbl:'Actual base'},
+    {col:'#00d4aa',lbl:'Optimal base'},
+    {col:'rgba(255,255,255,0.5)',lbl:'Group fixtures'},
+  ];
+  let ly=rh-36;
+  legs.forEach(l=>{
+    ctx.beginPath();ctx.arc(10,ly,4,0,Math.PI*2);ctx.fillStyle=l.col;ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='8px Barlow,sans-serif';
+    ctx.fillText(l.lbl,18,ly+3);ly+=13;
+  });
+
+  // Detail panel
+  const det=document.getElementById('rcMapDetail');
+  det.style.display='block';
+  const sav=unitMiles?Math.round(d.saving_km*KM_TO_MI):d.saving_km;
+  const unit=unitMiles?'mi':'km';
+  det.innerHTML=
+    '<div class="rc-detail-name">'+d.flagHtml+' '+d.team+'</div>'+
+    '<div class="rc-detail-row"><span class="rc-detail-label">Actual base</span><span class="rc-detail-val">'+d.actual_base+'</span></div>'+
+    (d.is_optimal
+      ?'<div class="rc-detail-row"><span class="rc-detail-label" style="color:var(--accent)">✓ Already optimal</span><span class="rc-detail-val" style="color:var(--accent)">0 '+unit+' wasted</span></div>'
+      :'<div class="rc-detail-row"><span class="rc-detail-label">Optimal base</span><span class="rc-detail-val" style="color:var(--accent)">'+d.optimal_base+'</span></div>'+
+       '<div class="rc-detail-row"><span class="rc-detail-label">Distance wasted</span><span class="rc-detail-val" style="color:var(--red)">'+sav.toLocaleString()+' '+unit+' ('+d.pct_saving+'%)</span></div>'+
+       '<div class="rc-detail-row"><span class="rc-detail-label">Bases are apart</span><span class="rc-detail-val">'+
+         (unitMiles?Math.round(d.base_distance_km*KM_TO_MI):d.base_distance_km).toLocaleString()+' '+unit+'</span></div>');
+}
 
 render();
 </script>
