@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Cup 2026 Travel · The Unanswered</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0d0f;
+  --surface:#111518;
+  --surface2:#181d22;
+  --border:rgba(255,255,255,0.07);
+  --text:#e8eaec;
+  --muted:#6b7580;
+  --accent:#00d4aa;
+  --gold:#f0c040;
+  --red:#ff5555;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Barlow',sans-serif;
+  font-weight:300;
+  line-height:1.6;
+  min-height:100vh;
+}
+
+/* ── Site nav ── */
+.site-nav{
+  background:#070a0c;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  align-items:center;
+  padding:0 2rem;
+  height:44px;
+  max-width:100%;
+  position:sticky;
+  top:0;
+  z-index:200;
+}
+.nav-brand{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
+  text-decoration:none;
+  margin-right:auto;
+}
+.nav-brand span{color:var(--accent)}
+.nav-links{display:flex;gap:2px}
+.nav-link{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:2px;
+  transition:all .15s;
+  border:1px solid transparent;
+}
+.nav-link:hover{color:var(--text);border-color:var(--border)}
+.nav-link.active{
+  color:var(--accent);
+  border-color:rgba(0,212,170,0.3);
+  background:rgba(0,212,170,0.07);
+}
+
+
+/* ── HERO ── */
+.hero{
+  min-height:calc(100vh - 44px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:4rem 2rem 5rem;
+  max-width:900px;
+  margin:0 auto;
+  position:relative;
+}
+.hero-kicker{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:1.5rem;
+}
+.hero-kicker a{
+  color:var(--muted);
+  text-decoration:none;
+  transition:color .15s;
+}
+.hero-kicker a:hover{color:var(--text)}
+.hero-kicker span{color:rgba(255,255,255,0.2);margin:0 .5rem}
+
+.hero h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(3rem,8vw,6.5rem);
+  font-weight:900;
+  line-height:.9;
+  text-transform:uppercase;
+  letter-spacing:-.03em;
+  margin-bottom:2rem;
+}
+.hero h1 em{
+  color:var(--accent);
+  font-style:normal;
+  display:block;
+}
+
+.hero-body{
+  max-width:560px;
+  font-size:1.05rem;
+  color:rgba(255,255,255,0.65);
+  line-height:1.75;
+  margin-bottom:3rem;
+}
+.hero-body p+p{margin-top:1rem}
+.hero-body strong{color:var(--text);font-weight:500}
+
+.hero-ctas{
+  display:flex;
+  gap:.75rem;
+  flex-wrap:wrap;
+}
+.cta-primary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:var(--accent);
+  color:#000;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-decoration:none;
+  padding:11px 22px;
+  border-radius:2px;
+  transition:opacity .15s;
+}
+.cta-primary:hover{opacity:.85}
+.cta-secondary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid var(--border);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-decoration:none;
+  padding:11px 22px;
+  border-radius:2px;
+  transition:all .15s;
+}
+.cta-secondary:hover{border-color:var(--accent);color:var(--text)}
+
+.scroll-hint{
+  position:absolute;
+  bottom:2rem;
+  left:2rem;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.scroll-hint::before{
+  content:'';
+  display:block;
+  width:1px;
+  height:28px;
+  background:var(--muted);
+  animation:scrollpulse 2s ease-in-out infinite;
+}
+@keyframes scrollpulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── DIVIDER ── */
+.rule{
+  max-width:900px;
+  margin:0 auto;
+  padding:0 2rem;
+  height:1px;
+  background:linear-gradient(90deg,var(--accent) 0%,transparent 50%);
+}
+
+/* ── THE QUESTION ── */
+.section{
+  max-width:900px;
+  margin:0 auto;
+  padding:4rem 2rem;
+}
+
+.section-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:1.25rem;
+}
+
+.section h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  line-height:1;
+  margin-bottom:1.5rem;
+}
+
+.section-body{
+  font-size:.95rem;
+  color:rgba(255,255,255,0.6);
+  line-height:1.8;
+  max-width:620px;
+}
+.section-body p+p{margin-top:1rem}
+.section-body strong{color:var(--text);font-weight:500}
+.section-body em{color:var(--accent);font-style:normal}
+
+/* ── STATS ROW ── */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:4px;
+  overflow:hidden;
+  margin:2.5rem 0;
+}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-cell{
+  background:var(--surface);
+  padding:1.25rem 1.5rem;
+}
+.stat-n{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:2.2rem;
+  font-weight:900;
+  color:var(--accent);
+  line-height:1;
+  margin-bottom:.3rem;
+}
+.stat-desc{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.4;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-family:'Barlow Condensed',sans-serif;
+}
+
+/* ── PROJECT CARDS ── */
+.project-cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin-top:3rem;
+}
+@media(max-width:640px){.project-cards{grid-template-columns:1fr}}
+
+.project-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:1.75rem;
+  text-decoration:none;
+  display:block;
+  transition:border-color .15s, background .15s;
+  position:relative;
+  overflow:hidden;
+}
+.project-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:var(--accent);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .2s;
+}
+.project-card:hover{border-color:rgba(0,212,170,0.25);background:var(--surface2)}
+.project-card:hover::before{transform:scaleX(1)}
+
+.card-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:.75rem;
+}
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.4rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:-.01em;
+  color:var(--text);
+  margin-bottom:.5rem;
+  line-height:1.1;
+}
+.card-q{
+  font-size:.85rem;
+  color:var(--accent);
+  font-style:italic;
+  margin-bottom:.75rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  letter-spacing:.3px;
+}
+.card-desc{
+  font-size:.85rem;
+  color:var(--muted);
+  line-height:1.6;
+}
+.card-arrow{
+  position:absolute;
+  bottom:1.5rem;
+  right:1.5rem;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;
+  color:var(--accent);
+  opacity:0;
+  transition:opacity .15s, transform .15s;
+  transform:translateX(-4px);
+}
+.project-card:hover .card-arrow{opacity:1;transform:translateX(0)}
+
+/* ── ABOUT ── */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+@media(max-width:680px){.about-grid{grid-template-columns:1fr}}
+
+.about-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:900;
+  text-transform:uppercase;
+  line-height:.95;
+  letter-spacing:-.02em;
+  margin-bottom:1rem;
+}
+.about-role{
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-family:'Barlow Condensed',sans-serif;
+  margin-bottom:1.5rem;
+}
+.about-links{
+  display:flex;
+  gap:.5rem;
+  flex-wrap:wrap;
+  margin-top:1.5rem;
+}
+.about-link{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  border:1px solid var(--border);
+  padding:5px 12px;
+  border-radius:2px;
+  transition:all .15s;
+}
+.about-link:hover{border-color:var(--accent);color:var(--text)}
+
+/* ── FOOTER ── */
+.footer{
+  border-top:1px solid var(--border);
+  max-width:900px;
+  margin:2rem auto 0;
+  padding:1.5rem 2rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+.footer-brand{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+}
+.footer-brand span{color:var(--accent)}
+.footer-note{font-size:10px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-brand" href="index.html">World Cup 2026 <span>Travel</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="travelmost.html">Who travels most?</a>
+    <a class="nav-link" href="rightcamp.html">Right base camp?</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">
+    <a href="https://www.theunanswered.co.uk/">The Unanswered</a>
+    <span>·</span>
+    The Sandbox
+    <span>·</span>
+    World Cup 2026
+  </div>
+  <h1>The question<br>nobody<br><em>asked.</em></h1>
+  <div class="hero-body">
+    <p>
+      The World Cup 2026 coverage will tell you who won, who scored, and which manager made the wrong substitution.
+      It will not tell you that <strong>some teams chose a base camp 2,000 kilometres from where the data said they should be</strong> — and what that decision cost them in the air before a ball was kicked.
+    </p>
+    <p>
+      The question isn't who travels the most. It's what the travel reveals about decisions made under conditions nobody analysed properly.
+    </p>
+  </div>
+  <div class="hero-ctas">
+    <a class="cta-primary" href="travelmost.html">Who travels most? →</a>
+    <a class="cta-secondary" href="rightcamp.html">Right base camp?</a>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<div class="rule"></div>
+
+<!-- THE QUESTION -->
+<section class="section">
+  <div class="section-label">The question</div>
+  <h2>48 teams.<br>16 cities.<br>One continent.</h2>
+  <div class="section-body">
+    <p>
+      For the first time, the World Cup spans three countries — the United States, Canada and Mexico — across a geography wider than any previous tournament. Every team chose a base camp and returns to it between every single game. The fixtures are fixed. The knockout paths are probabilistic. <strong>The distances are calculable.</strong>
+    </p>
+    <p>
+      That's the instrument. Define it first. Then see what it shows you.
+    </p>
+    <p>
+      What it shows you is that <em>Austria</em> — playing in San Francisco, Dallas and Kansas City — based themselves in Santa Barbara, California, adding nearly <em>10,000 km</em> to their expected tournament travel compared to the optimal choice available. That Portugal put their camp in Palm Beach, Florida, for a schedule that pointed north and west.
+      That France, somehow, got almost everything right.
+    </p>
+    <p>
+      None of this is in the pre-tournament analysis. It wasn't the question anyone was asking. That's the point.
+    </p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-cell"><div class="stat-n">48</div><div class="stat-desc">Teams, all base camps confirmed</div></div>
+    <div class="stat-cell"><div class="stat-n">16</div><div class="stat-desc">Host cities across 3 countries</div></div>
+    <div class="stat-cell"><div class="stat-n">495</div><div class="stat-desc">Possible 3rd-place bracket combinations</div></div>
+    <div class="stat-cell"><div class="stat-n">6</div><div class="stat-desc">Teams already at their optimal base</div></div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- THE TWO QUESTIONS -->
+<section class="section">
+  <div class="section-label">The two questions</div>
+  <h2>Where it goes.</h2>
+  <div class="section-body">
+    <p>Two separate analyses. One dataset. The same methodology running without editorial interference.</p>
+  </div>
+
+  <div class="project-cards">
+    <a class="project-card" href="travelmost.html">
+      <div class="card-num">Question 01</div>
+      <div class="card-title">Who travels the most?</div>
+      <div class="card-q">"The gap between the luckiest and unluckiest team is wider than you think."</div>
+      <div class="card-desc">
+        Every team's expected travel distance, calculated from confirmed base camps across all group stage fixtures and every possible knockout path — weighted by the probability of finishing 1st, 2nd or 3rd. Sortable. Filterable. With a live route map for each team's three possible journeys.
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="project-card" href="rightcamp.html">
+      <div class="card-num">Question 02</div>
+      <div class="card-title">Right base camp?</div>
+      <div class="card-q">"Austria should have been in Texas. Portugal had no business in Florida."</div>
+      <div class="card-desc">
+        For each of the 48 teams, we recalculated expected travel from every other team's confirmed base camp — and found the optimal location within the real pool of FIFA-approved facilities. The result is a ranked table of who got it right, who got it badly wrong, and what the misjudgement cost them.
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ABOUT -->
+<section class="section">
+  <div class="section-label">About</div>
+  <div class="about-grid">
+    <div>
+      <div class="about-name">Chris<br>Kelly</div>
+      <div class="about-role">Fractional CPO &amp; CTO · Glasgow</div>
+      <div class="section-body">
+        <p>
+          The Sandbox is where the same methodology runs without a client brief. No commercial outcome. No softening. The question is defined, the instrument is built, and whatever it shows — it shows.
+        </p>
+        <p>
+          The World Cup 2026 project started as a single question about travel distances. The base camp analysis came from asking what the data implied about decisions that had already been made. That's the move every time: <strong>build the instrument first, then see what it reveals.</strong>
+        </p>
+        <p>
+          The main body of work — corporate failure, dental technology, British music — lives at <a href="https://www.theunanswered.co.uk/" style="color:var(--accent);text-decoration:none">The Unanswered</a>.
+        </p>
+      </div>
+      <div class="about-links">
+        <a class="about-link" href="https://www.theunanswered.co.uk/">The Unanswered ↗</a>
+        <a class="about-link" href="https://www.linkedin.com/in/chriskellycto/">LinkedIn ↗</a>
+        <a class="about-link" href="https://twitter.com/cjk_1983">X / Twitter ↗</a>
+      </div>
+    </div>
+    <div class="section-body">
+      <p style="color:var(--muted);font-style:italic;font-size:.9rem;line-height:1.9;margin-top:.25rem">
+        "The frameworks that enterprise businesses spend millions getting wrong — built for founders, at the stage where they actually change everything."
+      </p>
+      <p style="margin-top:1.5rem">
+        Other Sandbox projects: <a href="https://noguiltypleasures.theunanswered.co.uk/" style="color:var(--accent);text-decoration:none">No Guilty Pleasures</a> (400 British acts, 70 years, scored by AI with no agenda), <a href="https://nosoftopinions.theunanswered.co.uk/" style="color:var(--accent);text-decoration:none">No Soft Opinions</a> (1,188 films, every score arguable), <a href="https://thefield.theunanswered.co.uk/" style="color:var(--accent);text-decoration:none">The Field</a> (300 wrestlers, 40 years, the buried careers), <a href="https://eurovision.theunanswered.co.uk/" style="color:var(--accent);text-decoration:none">Eurovision</a> (strip out the bloc voting, see what's left).
+      </p>
+      <p style="margin-top:1rem">
+        Every one of them starts the same way. <strong>The right question was always there. It just went unanswered.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <a class="footer-brand" href="https://www.theunanswered.co.uk/">The Unanswered <span>·</span> Chris Kelly</a>
+  <span class="footer-note">World Cup 2026 · Sandbox project · Glasgow</span>
+</footer>
+
+</body>
+</html>

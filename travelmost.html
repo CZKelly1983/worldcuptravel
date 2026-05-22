@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Travels Most? World Cup 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0d0f;--surface:#111518;--surface2:#181d22;--border:rgba(255,255,255,0.07);
+  --text:#e8eaec;--muted:#6b7580;--accent:#00d4aa;--accent2:#ff6b35;--accent3:#4a9eff;
+  --gold:#f0c040;--p1:#00d4aa;--p2:#f0c040;--p3:#ff6b35;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.5;min-height:100vh;overflow-x:hidden}
+
+.header{padding:2.5rem 2rem 2rem;max-width:1400px;margin:0 auto;position:relative}
+.header::after{content:'';position:absolute;bottom:0;left:2rem;right:2rem;height:1px;background:linear-gradient(90deg,var(--accent) 0%,transparent 60%)}
+.kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:.95;text-transform:uppercase;letter-spacing:-.02em;margin-bottom:.9rem}
+h1 em{color:var(--accent);font-style:normal}
+.intro{max-width:620px;font-size:.9rem;color:var(--muted);line-height:1.65}
+.intro strong{color:var(--text);font-weight:500}
+
+.controls{max-width:1400px;margin:1.5rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.ctrl-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-right:.5rem}
+.sort-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 16px;cursor:pointer;border-radius:2px;transition:all .15s}
+.sort-btn:hover{border-color:var(--accent);color:var(--text)}
+.sort-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.search-wrap{margin-left:auto;position:relative}
+.search-wrap input{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:13px;padding:6px 12px 6px 30px;border-radius:2px;width:180px;outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none}
+
+.main{max-width:1400px;margin:1.25rem auto 0;padding:0 2rem 4rem;display:grid;grid-template-columns:1fr 430px;gap:1.25rem;align-items:start}
+@media(max-width:960px){.main{grid-template-columns:1fr}}
+
+/* CHART */
+.chart-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.panel-header{padding:.85rem 1.25rem .7rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.panel-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.panel-count{font-size:11px;color:var(--muted);margin-left:auto}
+.legend-row{display:flex;gap:1.2rem;padding:.5rem 1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-line{width:20px;height:2px;flex-shrink:0;border-radius:1px}
+.chart-scroll{overflow-y:auto;max-height:680px}
+.chart-scroll::-webkit-scrollbar{width:3px}
+.chart-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.team-row{display:grid;grid-template-columns:26px 128px 1fr 80px;align-items:center;gap:.4rem;padding:5px 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;position:relative}
+.team-row:hover{background:var(--surface2)}
+.team-row.selected{background:rgba(0,212,170,0.05);border-left:2px solid var(--accent);padding-left:calc(1.25rem - 2px)}
+.row-rank{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);text-align:right}
+.row-team{display:flex;align-items:center;gap:7px;min-width:0}
+.row-flag{font-size:15px;flex-shrink:0;line-height:1;display:flex;align-items:center}
+.row-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.3px}
+.row-group{font-size:9px;color:var(--muted);letter-spacing:1px}
+.row-code{font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--muted);letter-spacing:.5px}
+.bar-track{position:relative;height:18px;display:flex;align-items:center}
+.bar-bg{position:absolute;left:0;right:0;height:5px;background:#1e2830;border-radius:1px}
+.bar-range{position:absolute;height:5px;background:rgba(0,212,170,.12);border-radius:1px;transition:all .3s}
+.bar-gs{position:absolute;height:5px;background:var(--accent3);opacity:.55;border-radius:1px;transition:all .3s}
+.bar-expected{position:absolute;width:2px;height:13px;background:var(--accent);border-radius:1px;top:50%;transform:translateY(-50%);transition:all .3s}
+.row-km{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap}
+.row-km span{display:block;font-size:10px;color:var(--muted);font-weight:400}
+
+/* MAP PANEL */
+.map-panel{position:sticky;top:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.map-placeholder{padding:2rem;text-align:center;color:var(--muted);font-size:13px;height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem}
+canvas#mapCanvas{display:block;width:100%;background:#0d1a24}
+
+.team-detail{padding:.9rem 1.25rem;border-top:1px solid var(--border)}
+.detail-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:.2rem}
+.detail-base{font-size:11px;color:var(--muted);margin-bottom:.65rem}
+.detail-base strong{color:var(--text);font-weight:500}
+.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:.65rem}
+.stat-card{background:var(--surface2);border-radius:3px;padding:7px 9px;border:1px solid var(--border)}
+.stat-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.stat-val{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+.stat-val.accent{color:var(--accent)}.stat-val.gold{color:var(--gold)}.stat-val.blue{color:var(--accent3)}
+
+.detail-paths{display:flex;flex-direction:column;gap:3px}
+.path-row{display:flex;align-items:center;gap:7px;font-size:11px;padding:5px 8px;background:var(--surface2);border-radius:3px;border-left:3px solid transparent}
+.path-row.p1{border-color:var(--p1)}.path-row.p2{border-color:var(--p2)}.path-row.p3{border-color:var(--p3)}
+.path-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;width:48px;flex-shrink:0}
+.path-row.p1 .path-label{color:var(--p1)}.path-row.p2 .path-label{color:var(--p2)}.path-row.p3 .path-label{color:var(--p3)}
+.path-prob{color:var(--muted);width:28px;flex-shrink:0;font-size:10px}
+.path-venues{color:var(--muted);font-size:9px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.path-km{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;margin-left:auto}
+.path-note{font-size:9px;color:var(--muted);padding:3px 8px;font-style:italic}
+
+.path-selector-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:.5rem 0 .35rem}
+.path-selector{display:flex;flex-direction:column;gap:5px}
+.path-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:12px;cursor:pointer;border-radius:3px;padding:7px 10px;display:flex;align-items:center;gap:8px;text-align:left;width:100%;transition:all .12s}
+.path-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text)}
+.path-btn.active.p1-btn{background:rgba(0,212,170,0.1);border-color:var(--p1);color:var(--p1)}
+.path-btn.active.p2-btn{background:rgba(240,192,64,0.1);border-color:var(--p2);color:var(--p2)}
+.path-btn.active.p3-btn{background:rgba(255,107,53,0.1);border-color:var(--p3);color:var(--p3)}
+.btn-label{font-weight:700;letter-spacing:.5px;flex:0 0 auto}
+.btn-km{font-size:13px;font-weight:600;margin-left:auto;color:inherit}
+.btn-prob{font-size:10px;color:var(--muted);flex-shrink:0;width:28px;text-align:right}
+.path-btn.active .btn-prob{color:inherit;opacity:.7}
+.third-place-group{display:flex;flex-direction:column;gap:4px}
+.third-label-row{display:flex;align-items:center;gap:8px;padding:0 2px}
+.btn-label-plain{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--muted);flex:0 0 auto}
+.btn-prob-plain{font-size:10px;color:var(--muted);width:28px}
+.btn-km-plain{font-size:11px;color:var(--muted);margin-left:auto}
+.third-btns{display:flex;gap:4px;flex-wrap:wrap}
+.p3-btn{font-size:11px;padding:4px 9px;flex:0 0 auto;width:auto}
+.has-tip{position:relative;cursor:help;border-bottom:1px dotted var(--muted)}
+.has-tip .tip{
+  display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#1e2a32;border:1px solid rgba(255,255,255,0.15);border-radius:4px;
+  padding:8px 11px;width:220px;font-size:11px;font-family:'Barlow',sans-serif;
+  font-weight:400;color:rgba(255,255,255,0.75);line-height:1.5;
+  pointer-events:none;z-index:100;text-align:left;
+}
+.has-tip .tip::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:#1e2a32;
+}
+.has-tip:hover .tip{display:block}
+.footnote{max-width:1400px;margin:0 auto;padding:0 2rem 3rem;font-size:10px;color:var(--muted);line-height:1.6}
+
+/* ── Site nav ── */
+.site-nav{
+  background:#070a0c;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  align-items:center;
+  padding:0 2rem;
+  height:44px;
+  max-width:100%;
+  position:sticky;
+  top:0;
+  z-index:200;
+}
+.nav-brand{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
+  text-decoration:none;
+  margin-right:auto;
+}
+.nav-brand span{color:var(--accent)}
+.nav-links{display:flex;gap:2px}
+.nav-link{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:2px;
+  transition:all .15s;
+  border:1px solid transparent;
+}
+.nav-link:hover{color:var(--text);border-color:var(--border)}
+.nav-link.active{
+  color:var(--accent);
+  border-color:rgba(0,212,170,0.3);
+  background:rgba(0,212,170,0.07);
+}
+
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-brand" href="index.html">World Cup 2026 <span>Travel</span></a>
+  <div class="nav-links">
+    <a class="nav-link active" href="travelmost.html">Who travels most?</a>
+    <a class="nav-link" href="rightcamp.html">Right base camp?</a>
+  </div>
+</nav>
+
+<header class="header">
+  <div class="kicker">The Unanswered Question · World Cup 2026</div>
+  <h1>Who <em>really</em> travels<br>the furthest?</h1>
+  <p class="intro">48 teams. 16 host cities across three countries. Every team flies back to their base camp between each game. With every knockout result changing the route, <strong>the gap between the luckiest and unluckiest team could exceed 40,000 km</strong>. Third-place finishers face up to 8 different possible bracket destinations.</p>
+</header>
+
+<div class="controls">
+  <span class="ctrl-label">Sort by</span>
+  <button class="sort-btn active" data-sort="expected"><span class="has-tip" style="border-bottom:1px dotted currentColor;cursor:help">Expected distance<span class="tip">A probability-weighted average across all possible tournament paths — not a specific journey. Combines each finishing position’s total distance weighted by how likely that finish is.</span></span></button>
+  <button class="sort-btn" data-sort="max">Maximum possible</button>
+  <button class="sort-btn" data-sort="gs">Group stage only</button>
+  <button class="sort-btn" data-sort="alpha">A–Z</button>
+  <button class="sort-btn" id="unitToggle" onclick="toggleUnit()" style="margin-left:8px;border-color:rgba(255,255,255,0.2)">Switch to miles</button>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="Search team…">
+  </div>
+</div>
+
+<div class="main">
+  <div class="chart-panel">
+    <div class="panel-header">
+      <span class="panel-title">Total tournament travel — base camp return trips for every game</span>
+      <span class="panel-count" id="teamCount">48 teams</span>
+    </div>
+    <div class="legend-row">
+      <div class="leg-item"><div class="leg-line" style="background:var(--accent3);opacity:.7"></div>Group stage</div>
+      <div class="leg-item"><div class="leg-line" style="background:rgba(0,212,170,.4);width:28px"></div>Range (elim–max)</div>
+      <div class="leg-item"><div style="width:2px;height:12px;background:var(--accent);border-radius:1px"></div><span class="has-tip" style="border-bottom:1px dotted var(--muted);cursor:help">Expected<span class="tip" style="width:200px">Probability-weighted average across all finishing positions — not a real journey distance.</span></span></div>
+    </div>
+    <div class="chart-scroll" id="chartBody"></div>
+  </div>
+
+  <div class="map-panel" id="mapPanel">
+    <div class="panel-header"><span class="panel-title">Route map</span></div>
+    <div id="mapContainer">
+      <div class="map-placeholder" id="mapPlaceholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        <span>Click any team to see their routes</span>
+      </div>
+      <canvas id="mapCanvas" width="430" height="290" style="display:none"></canvas>
+    </div>
+    <div class="team-detail" id="teamDetail" style="display:none"></div>
+  </div>
+</div>
+
+<div class="footnote">
+  <strong>Methodology:</strong> Distances are great-circle (haversine) between each team's confirmed base camp and each match venue, doubled for the return trip. Teams return to base between every fixture including knockout matches. For 1st and 2nd place finishers, the full bracket path through Round of 32, R16, QF, SF and Final is fixed by FIFA draw rules. For 3rd-place finishers, venues vary by which groups produce the 8 qualifying 3rd-place teams — the average is shown across all eligible bracket slots. Expected distance is probability-weighted using pre-tournament bookmaker odds (May 2026). <strong>Sources:</strong> FIFA official schedule, SportsTravel Magazine (base camps), MLS Soccer (confirmed venues), Wikipedia knockout bracket.
+</div>
+
+<script>
+const RAW={"teams":[{"team":"Canada","flag":"🇨🇦","group":"B","base_camp":"Vancouver BC","base_coords":[49.2827,-123.1207],"group_fixtures":[{"opponent":"Bosnia","city":"Toronto"},{"opponent":"Qatar","city":"Vancouver"},{"opponent":"Switzerland","city":"Vancouver"}],"probs":{"1st":0.35,"2nd":0.35,"3rd":0.2,"4th":0.1},"gs_km":6718,"if_1st_km":26778,"if_2nd_km":38084,"if_3rd_km":26692,"if_3rd_min_km":26692,"if_3rd_max_km":26692,"if_3rd_paths":[["San Francisco","Seattle","Los Angeles","Dallas","New York"]],"expected_km":27394,"max_km":38084,"min_km":6718,"knockout_path":{"as_1st":{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[26692],"code":"CA","flagHtml":"<span class=\"fi fi-ca\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Portugal","flag":"🇵🇹","group":"K","base_camp":"Palm Beach FL","base_coords":[26.7153,-80.0534],"group_fixtures":[{"opponent":"DR Congo","city":"Houston"},{"opponent":"Uzbekistan","city":"Houston"},{"opponent":"Colombia","city":"Miami"}],"probs":{"1st":0.6,"2nd":0.28,"3rd":0.09,"4th":0.03},"gs_km":6328,"if_1st_km":27982,"if_2nd_km":27980,"if_3rd_km":22786,"if_3rd_min_km":17590,"if_3rd_max_km":27982,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":26375,"max_km":27982,"min_km":6328,"knockout_path":{"as_1st":{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[17590,27982],"code":"PT","flagHtml":"<span class=\"fi fi-pt\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Austria","flag":"🇦🇹","group":"J","base_camp":"Santa Barbara CA","base_coords":[34.4208,-119.6982],"group_fixtures":[{"opponent":"Jordan","city":"San Francisco"},{"opponent":"Argentina","city":"Dallas"},{"opponent":"Algeria","city":"Kansas City"}],"probs":{"1st":0.2,"2nd":0.28,"3rd":0.3,"4th":0.22},"gs_km":9570,"if_1st_km":42938,"if_2nd_km":26580,"if_3rd_km":33906,"if_3rd_min_km":25852,"if_3rd_max_km":43592,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":25898,"max_km":43592,"min_km":9570,"knockout_path":{"as_1st":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[43592,25852,28034,35404,36648],"code":"AT","flagHtml":"<span class=\"fi fi-at\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Colombia","flag":"🇨🇴","group":"K","base_camp":"Guadalajara MX","base_coords":[20.6597,-103.3496],"group_fixtures":[{"opponent":"Uzbekistan","city":"Mexico City"},{"opponent":"DR Congo","city":"Guadalajara"},{"opponent":"Portugal","city":"Miami"}],"probs":{"1st":0.22,"2nd":0.32,"3rd":0.28,"4th":0.18},"gs_km":5780,"if_1st_km":33738,"if_2nd_km":29750,"if_3rd_km":30936,"if_3rd_min_km":28134,"if_3rd_max_km":33738,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":24320,"max_km":33738,"min_km":5780,"knockout_path":{"as_1st":{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[28134,33738],"code":"CO","flagHtml":"<span class=\"fi fi-co\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Belgium","flag":"🇧🇪","group":"G","base_camp":"Renton WA","base_coords":[47.4829,-122.2171],"group_fixtures":[{"opponent":"Egypt","city":"Seattle"},{"opponent":"Iran","city":"Los Angeles"},{"opponent":"New Zealand","city":"Vancouver"}],"probs":{"1st":0.45,"2nd":0.35,"3rd":0.15,"4th":0.05},"gs_km":3516,"if_1st_km":19682,"if_2nd_km":35362,"if_3rd_km":21777,"if_3rd_min_km":19682,"if_3rd_max_km":23872,"if_3rd_paths":[["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":23772,"max_km":35362,"min_km":3516,"knockout_path":{"as_1st":{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[19682,23872],"code":"BE","flagHtml":"<span class=\"fi fi-be\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Bosnia","flag":"🇧🇦","group":"B","base_camp":"Sandy UT","base_coords":[40.5649,-111.8389],"group_fixtures":[{"opponent":"Canada","city":"Toronto"},{"opponent":"Switzerland","city":"Los Angeles"},{"opponent":"Qatar","city":"Seattle"}],"probs":{"1st":0.25,"2nd":0.3,"3rd":0.25,"4th":0.2},"gs_km":9496,"if_1st_km":29108,"if_2nd_km":31364,"if_3rd_km":24984,"if_3rd_min_km":24984,"if_3rd_max_km":24984,"if_3rd_paths":[["San Francisco","Seattle","Los Angeles","Dallas","New York"]],"expected_km":23554,"max_km":31364,"min_km":9496,"knockout_path":{"as_1st":{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[24984],"code":"BA","flagHtml":"<span class=\"fi fi-ba\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"USA","flag":"🇺🇸","group":"D","base_camp":"Irvine CA","base_coords":[33.6846,-117.8265],"group_fixtures":[{"opponent":"Paraguay","city":"Los Angeles"},{"opponent":"Australia","city":"Seattle"},{"opponent":"Türkiye","city":"Los Angeles"}],"probs":{"1st":0.4,"2nd":0.35,"3rd":0.18,"4th":0.07},"gs_km":3408,"if_1st_km":19498,"if_2nd_km":31732,"if_3rd_km":32214,"if_3rd_min_km":19498,"if_3rd_max_km":40440,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":23231,"max_km":40440,"min_km":3408,"knockout_path":{"as_1st":{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[39290,40440,19498,29630],"code":"US","flagHtml":"<span class=\"fi fi-us\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"England","flag":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","group":"L","base_camp":"Kansas City MO","base_coords":[39.0997,-94.5786],"group_fixtures":[{"opponent":"Croatia","city":"Dallas"},{"opponent":"Ghana","city":"Boston"},{"opponent":"Panama","city":"New York"}],"probs":{"1st":0.55,"2nd":0.3,"3rd":0.11,"4th":0.04},"gs_km":8972,"if_1st_km":25244,"if_2nd_km":22536,"if_3rd_km":22488,"if_3rd_min_km":19732,"if_3rd_max_km":25244,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":22987,"max_km":25244,"min_km":8972,"knockout_path":{"as_1st":{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[25244,19732],"code":"EN","flagHtml":"<span class=\"fi fi-gb-eng\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Uruguay","flag":"🇺🇾","group":"H","base_camp":"Playa del Carmen MX","base_coords":[20.6296,-87.0739],"group_fixtures":[{"opponent":"Saudi Arabia","city":"Miami"},{"opponent":"Cape Verde","city":"Miami"},{"opponent":"Spain","city":"Guadalajara"}],"probs":{"1st":0.25,"2nd":0.35,"3rd":0.25,"4th":0.15},"gs_km":7046,"if_1st_km":32476,"if_2nd_km":24260,"if_3rd_km":27854,"if_3rd_min_km":22028,"if_3rd_max_km":39732,"if_3rd_paths":[["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":22914,"max_km":39732,"min_km":7046,"knockout_path":{"as_1st":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[27196,22028,22460,39732],"code":"UY","flagHtml":"<span class=\"fi fi-uy\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"South Africa","flag":"🇿🇦","group":"A","base_camp":"Pachuca MX","base_coords":[20.1011,-98.7591],"group_fixtures":[{"opponent":"Mexico","city":"Mexico City"},{"opponent":"Czechia","city":"Atlanta"},{"opponent":"South Korea","city":"Monterrey"}],"probs":{"1st":0.2,"2nd":0.3,"3rd":0.3,"4th":0.2},"gs_km":5604,"if_1st_km":20656,"if_2nd_km":29272,"if_3rd_km":35153,"if_3rd_min_km":34816,"if_3rd_max_km":35490,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":21654,"max_km":35490,"min_km":5604,"knockout_path":{"as_1st":{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[35490,34816],"code":"ZA","flagHtml":"<span class=\"fi fi-za\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Australia","flag":"🇦🇺","group":"D","base_camp":"Alameda CA","base_coords":[37.7652,-122.2416],"group_fixtures":[{"opponent":"Türkiye","city":"Vancouver"},{"opponent":"USA","city":"Seattle"},{"opponent":"Paraguay","city":"San Francisco"}],"probs":{"1st":0.2,"2nd":0.22,"3rd":0.3,"4th":0.28},"gs_km":4844,"if_1st_km":21120,"if_2nd_km":36250,"if_3rd_km":35223,"if_3rd_min_km":21120,"if_3rd_max_km":44604,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":21115,"max_km":44604,"min_km":4844,"knockout_path":{"as_1st":{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[43054,44604,21120,32114],"code":"AU","flagHtml":"<span class=\"fi fi-au\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Switzerland","flag":"🇨🇭","group":"B","base_camp":"San Diego CA","base_coords":[32.7157,-117.1611],"group_fixtures":[{"opponent":"Qatar","city":"San Francisco"},{"opponent":"Bosnia","city":"Los Angeles"},{"opponent":"Canada","city":"Vancouver"}],"probs":{"1st":0.3,"2nd":0.2,"3rd":0.25,"4th":0.25},"gs_km":5532,"if_1st_km":31342,"if_2nd_km":29892,"if_3rd_km":22222,"if_3rd_min_km":22222,"if_3rd_max_km":22222,"if_3rd_paths":[["San Francisco","Seattle","Los Angeles","Dallas","New York"]],"expected_km":20943,"max_km":31342,"min_km":5532,"knockout_path":{"as_1st":{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[22222],"code":"CH","flagHtml":"<span class=\"fi fi-ch\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Jordan","flag":"🇯🇴","group":"J","base_camp":"Portland OR","base_coords":[45.5051,-122.675],"group_fixtures":[{"opponent":"Austria","city":"San Francisco"},{"opponent":"Algeria","city":"San Francisco"},{"opponent":"Argentina","city":"Dallas"}],"probs":{"1st":0.1,"2nd":0.17,"3rd":0.24,"4th":0.49},"gs_km":8824,"if_1st_km":44106,"if_2nd_km":32404,"if_3rd_km":32611,"if_3rd_min_km":25466,"if_3rd_max_km":46510,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":20186,"max_km":46510,"min_km":8824,"knockout_path":{"as_1st":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[46510,26804,25466,30144,34130],"code":"JO","flagHtml":"<span class=\"fi fi-jo\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Paraguay","flag":"🇵🇾","group":"D","base_camp":"San Jose CA","base_coords":[37.3382,-121.8863],"group_fixtures":[{"opponent":"USA","city":"Los Angeles"},{"opponent":"Türkiye","city":"San Francisco"},{"opponent":"Australia","city":"San Francisco"}],"probs":{"1st":0.25,"2nd":0.3,"3rd":0.28,"4th":0.17},"gs_km":1024,"if_1st_km":17112,"if_2nd_km":32180,"if_3rd_km":31246,"if_3rd_min_km":17112,"if_3rd_max_km":40578,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":20062,"max_km":40578,"min_km":1024,"knockout_path":{"as_1st":{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[39066,40578,17112,28230],"code":"PY","flagHtml":"<span class=\"fi fi-py\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"New Zealand","flag":"🇳🇿","group":"G","base_camp":"San Diego CA","base_coords":[32.7157,-117.1611],"group_fixtures":[{"opponent":"Iran","city":"Los Angeles"},{"opponent":"Egypt","city":"Vancouver"},{"opponent":"Belgium","city":"Vancouver"}],"probs":{"1st":0.15,"2nd":0.17,"3rd":0.28,"4th":0.4},"gs_km":7986,"if_1st_km":26738,"if_2nd_km":35988,"if_3rd_km":30267,"if_3rd_min_km":26738,"if_3rd_max_km":33796,"if_3rd_paths":[["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":19739,"max_km":35988,"min_km":7986,"knockout_path":{"as_1st":{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[26738,33796],"code":"NZ","flagHtml":"<span class=\"fi fi-nz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Mexico","flag":"🇲🇽","group":"A","base_camp":"Mexico City","base_coords":[19.4326,-99.1332],"group_fixtures":[{"opponent":"South Africa","city":"Mexico City"},{"opponent":"South Korea","city":"Guadalajara"},{"opponent":"Czechia","city":"Mexico City"}],"probs":{"1st":0.45,"2nd":0.35,"3rd":0.15,"4th":0.05},"gs_km":922,"if_1st_km":16098,"if_2nd_km":25286,"if_3rd_km":31154,"if_3rd_min_km":30686,"if_3rd_max_km":31622,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":19317,"max_km":31622,"min_km":922,"knockout_path":{"as_1st":{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[31622,30686],"code":"MX","flagHtml":"<span class=\"fi fi-mx\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Spain","flag":"🇪🇸","group":"H","base_camp":"Chattanooga TN","base_coords":[35.0456,-85.3097],"group_fixtures":[{"opponent":"Cape Verde","city":"Atlanta"},{"opponent":"Saudi Arabia","city":"Atlanta"},{"opponent":"Uruguay","city":"Guadalajara"}],"probs":{"1st":0.55,"2nd":0.3,"3rd":0.1,"4th":0.05},"gs_km":5426,"if_1st_km":24282,"if_2nd_km":12534,"if_3rd_km":19682,"if_3rd_min_km":15044,"if_3rd_max_km":29432,"if_3rd_paths":[["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":18884,"max_km":29432,"min_km":5426,"knockout_path":{"as_1st":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[15044,19164,15088,29432],"code":"ES","flagHtml":"<span class=\"fi fi-es\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Iran","flag":"🇮🇷","group":"G","base_camp":"Tucson AZ","base_coords":[32.2226,-110.9747],"group_fixtures":[{"opponent":"New Zealand","city":"Los Angeles"},{"opponent":"Belgium","city":"Los Angeles"},{"opponent":"Egypt","city":"Seattle"}],"probs":{"1st":0.15,"2nd":0.2,"3rd":0.3,"4th":0.35},"gs_km":6760,"if_1st_km":25434,"if_2nd_km":29420,"if_3rd_km":27944,"if_3rd_min_km":25434,"if_3rd_max_km":30454,"if_3rd_paths":[["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":18351,"max_km":30454,"min_km":6760,"knockout_path":{"as_1st":{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[25434,30454],"code":"IR","flagHtml":"<span class=\"fi fi-ir\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Egypt","flag":"🇪🇬","group":"G","base_camp":"Spokane WA","base_coords":[47.6588,-117.426],"group_fixtures":[{"opponent":"Belgium","city":"Seattle"},{"opponent":"New Zealand","city":"Vancouver"},{"opponent":"Iran","city":"Seattle"}],"probs":{"1st":0.25,"2nd":0.28,"3rd":0.27,"4th":0.2},"gs_km":2384,"if_1st_km":18632,"if_2nd_km":30874,"if_3rd_km":20135,"if_3rd_min_km":18632,"if_3rd_max_km":21638,"if_3rd_paths":[["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":17634,"max_km":30874,"min_km":2384,"knockout_path":{"as_1st":{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[18632,21638],"code":"EG","flagHtml":"<span class=\"fi fi-eg\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Netherlands","flag":"🇳🇱","group":"F","base_camp":"Kansas City MO","base_coords":[39.0997,-94.5786],"group_fixtures":[{"opponent":"Japan","city":"Dallas"},{"opponent":"Sweden","city":"Houston"},{"opponent":"Tunisia","city":"Kansas City"}],"probs":{"1st":0.45,"2nd":0.35,"3rd":0.15,"4th":0.05},"gs_km":3604,"if_1st_km":17846,"if_2nd_km":18852,"if_3rd_km":20855,"if_3rd_min_km":19384,"if_3rd_max_km":22582,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":17083,"max_km":22582,"min_km":3604,"knockout_path":{"as_1st":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[19886,20260,22164,22582,19384],"code":"NL","flagHtml":"<span class=\"fi fi-nl\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Japan","flag":"🇯🇵","group":"F","base_camp":"Nashville TN","base_coords":[36.1627,-86.7816],"group_fixtures":[{"opponent":"Netherlands","city":"Dallas"},{"opponent":"Tunisia","city":"Monterrey"},{"opponent":"Sweden","city":"Dallas"}],"probs":{"1st":0.25,"2nd":0.3,"3rd":0.28,"4th":0.17},"gs_km":7544,"if_1st_km":20628,"if_2nd_km":17858,"if_3rd_km":23198,"if_3rd_min_km":18136,"if_3rd_max_km":30326,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":16846,"max_km":30326,"min_km":7544,"knockout_path":{"as_1st":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[20170,18136,22128,30326,25232],"code":"JP","flagHtml":"<span class=\"fi fi-jp\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Qatar","flag":"🇶🇦","group":"B","base_camp":"Santa Barbara CA","base_coords":[34.4208,-119.6982],"group_fixtures":[{"opponent":"Switzerland","city":"San Francisco"},{"opponent":"Canada","city":"Vancouver"},{"opponent":"Bosnia","city":"Seattle"}],"probs":{"1st":0.1,"2nd":0.15,"3rd":0.3,"4th":0.45},"gs_km":7092,"if_1st_km":32926,"if_2nd_km":32830,"if_3rd_km":23374,"if_3rd_min_km":23374,"if_3rd_max_km":23374,"if_3rd_paths":[["San Francisco","Seattle","Los Angeles","Dallas","New York"]],"expected_km":16809,"max_km":32926,"min_km":7092,"knockout_path":{"as_1st":{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[23374],"code":"QA","flagHtml":"<span class=\"fi fi-qa\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Türkiye","flag":"🇹🇷","group":"D","base_camp":"Mesa AZ","base_coords":[33.4152,-111.8315],"group_fixtures":[{"opponent":"Australia","city":"Vancouver"},{"opponent":"Paraguay","city":"San Francisco"},{"opponent":"USA","city":"Los Angeles"}],"probs":{"1st":0.15,"2nd":0.13,"3rd":0.24,"4th":0.48},"gs_km":7228,"if_1st_km":23666,"if_2nd_km":30298,"if_3rd_km":32672,"if_3rd_min_km":23666,"if_3rd_max_km":39108,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":16784,"max_km":39108,"min_km":7228,"knockout_path":{"as_1st":{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[38096,39108,23666,29818],"code":"TR","flagHtml":"<span class=\"fi fi-tr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Curaçao","flag":"🇨🇼","group":"E","base_camp":"Boca Raton FL","base_coords":[26.3683,-80.1289],"group_fixtures":[{"opponent":"Germany","city":"Houston"},{"opponent":"Ecuador","city":"Kansas City"},{"opponent":"Ivory Coast","city":"Philadelphia"}],"probs":{"1st":0.05,"2nd":0.1,"3rd":0.3,"4th":0.55},"gs_km":10116,"if_1st_km":27936,"if_2nd_km":22416,"if_3rd_km":32260,"if_3rd_min_km":21464,"if_3rd_max_km":41982,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":16688,"max_km":41982,"min_km":10116,"knockout_path":{"as_1st":{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[27936,23810,21464,41476,41982,37100,32052],"code":"CW","flagHtml":"<span class=\"fi fi-cw\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"South Korea","flag":"🇰🇷","group":"A","base_camp":"Guadalajara MX","base_coords":[20.6597,-103.3496],"group_fixtures":[{"opponent":"Czechia","city":"Guadalajara"},{"opponent":"Mexico","city":"Guadalajara"},{"opponent":"South Africa","city":"Monterrey"}],"probs":{"1st":0.2,"2nd":0.22,"3rd":0.3,"4th":0.28},"gs_km":1278,"if_1st_km":19822,"if_2nd_km":25748,"if_3rd_km":31413,"if_3rd_min_km":29314,"if_3rd_max_km":33512,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":16427,"max_km":33512,"min_km":1278,"knockout_path":{"as_1st":{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[33512,29314],"code":"KR","flagHtml":"<span class=\"fi fi-kr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Croatia","flag":"🇭🇷","group":"L","base_camp":"Alexandria VA","base_coords":[38.8048,-77.0469],"group_fixtures":[{"opponent":"England","city":"Dallas"},{"opponent":"Panama","city":"Toronto"},{"opponent":"Ghana","city":"Philadelphia"}],"probs":{"1st":0.22,"2nd":0.32,"3rd":0.28,"4th":0.18},"gs_km":5398,"if_1st_km":18500,"if_2nd_km":22314,"if_3rd_km":19960,"if_3rd_min_km":18500,"if_3rd_max_km":21420,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":16425,"max_km":22314,"min_km":5398,"knockout_path":{"as_1st":{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[18500,21420],"code":"HR","flagHtml":"<span class=\"fi fi-hr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Germany","flag":"🇩🇪","group":"E","base_camp":"Winston-Salem NC","base_coords":[36.0999,-80.2442],"group_fixtures":[{"opponent":"Curaçao","city":"Houston"},{"opponent":"Ivory Coast","city":"Toronto"},{"opponent":"Ecuador","city":"New York"}],"probs":{"1st":0.55,"2nd":0.3,"3rd":0.1,"4th":0.05},"gs_km":6348,"if_1st_km":16334,"if_2nd_km":15700,"if_3rd_km":23988,"if_3rd_min_km":16334,"if_3rd_max_km":32624,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":15828,"max_km":32624,"min_km":6348,"knockout_path":{"as_1st":{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[16334,21484,17174,32624,32566,26308,21426],"code":"DE","flagHtml":"<span class=\"fi fi-de\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Saudi Arabia","flag":"🇸🇦","group":"H","base_camp":"Austin TX","base_coords":[30.2672,-97.7431],"group_fixtures":[{"opponent":"Uruguay","city":"Miami"},{"opponent":"Spain","city":"Atlanta"},{"opponent":"Cape Verde","city":"Houston"}],"probs":{"1st":0.12,"2nd":0.2,"3rd":0.35,"4th":0.33},"gs_km":6658,"if_1st_km":20550,"if_2nd_km":22380,"if_3rd_km":25044,"if_3rd_min_km":22560,"if_3rd_max_km":27428,"if_3rd_paths":[["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":15781,"max_km":27428,"min_km":6658,"knockout_path":{"as_1st":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[27428,22560,22764,27422],"code":"SA","flagHtml":"<span class=\"fi fi-sa\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Czechia","flag":"🇨🇿","group":"A","base_camp":"Mansfield TX","base_coords":[32.5632,-97.1417],"group_fixtures":[{"opponent":"South Korea","city":"Guadalajara"},{"opponent":"South Africa","city":"Atlanta"},{"opponent":"Mexico","city":"Mexico City"}],"probs":{"1st":0.15,"2nd":0.13,"3rd":0.25,"4th":0.47},"gs_km":8252,"if_1st_km":24604,"if_2nd_km":22454,"if_3rd_km":27285,"if_3rd_min_km":27064,"if_3rd_max_km":27506,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":15739,"max_km":27506,"min_km":8252,"knockout_path":{"as_1st":{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[27064,27506],"code":"CZ","flagHtml":"<span class=\"fi fi-cz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Argentina","flag":"🇦🇷","group":"J","base_camp":"Kansas City MO","base_coords":[39.0997,-94.5786],"group_fixtures":[{"opponent":"Algeria","city":"Kansas City"},{"opponent":"Austria","city":"Dallas"},{"opponent":"Jordan","city":"Dallas"}],"probs":{"1st":0.55,"2nd":0.3,"3rd":0.11,"4th":0.04},"gs_km":2988,"if_1st_km":14820,"if_2nd_km":18204,"if_3rd_km":19153,"if_3rd_min_km":13748,"if_3rd_max_km":22022,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":15252,"max_km":22022,"min_km":2988,"knockout_path":{"as_1st":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[19260,21966,22022,18768,13748],"code":"AR","flagHtml":"<span class=\"fi fi-ar\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Brazil","flag":"🇧🇷","group":"C","base_camp":"Basking Ridge NJ","base_coords":[40.7068,-74.5712],"group_fixtures":[{"opponent":"Morocco","city":"New York"},{"opponent":"Haiti","city":"Philadelphia"},{"opponent":"Scotland","city":"Miami"}],"probs":{"1st":0.5,"2nd":0.35,"3rd":0.12,"4th":0.03},"gs_km":3734,"if_1st_km":14168,"if_2nd_km":19122,"if_3rd_km":14098,"if_3rd_min_km":9662,"if_3rd_max_km":22872,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"]],"expected_km":15170,"max_km":22872,"min_km":3734,"knockout_path":{"as_1st":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[9662,9760,22872],"code":"BR","flagHtml":"<span class=\"fi fi-br\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Algeria","flag":"🇩🇿","group":"J","base_camp":"Lawrence KS","base_coords":[38.9717,-95.2353],"group_fixtures":[{"opponent":"Argentina","city":"Kansas City"},{"opponent":"Jordan","city":"San Francisco"},{"opponent":"Austria","city":"Kansas City"}],"probs":{"1st":0.15,"2nd":0.25,"3rd":0.35,"4th":0.25},"gs_km":4930,"if_1st_km":17226,"if_2nd_km":19910,"if_3rd_km":21164,"if_3rd_min_km":16038,"if_3rd_max_km":23744,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":14326,"max_km":23744,"min_km":4930,"knockout_path":{"as_1st":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[21506,23658,23744,20874,16038],"code":"DZ","flagHtml":"<span class=\"fi fi-dz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"DR Congo","flag":"🇨🇩","group":"K","base_camp":"Houston TX","base_coords":[29.7604,-95.3698],"group_fixtures":[{"opponent":"Portugal","city":"Houston"},{"opponent":"Colombia","city":"Guadalajara"},{"opponent":"Uzbekistan","city":"Atlanta"}],"probs":{"1st":0.1,"2nd":0.22,"3rd":0.38,"4th":0.3},"gs_km":4854,"if_1st_km":22188,"if_2nd_km":19498,"if_3rd_km":20811,"if_3rd_min_km":19434,"if_3rd_max_km":22188,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":13872,"max_km":22188,"min_km":4854,"knockout_path":{"as_1st":{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[19434,22188],"code":"CD","flagHtml":"<span class=\"fi fi-cd\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Morocco","flag":"🇲🇦","group":"C","base_camp":"Basking Ridge NJ","base_coords":[40.7068,-74.5712],"group_fixtures":[{"opponent":"Brazil","city":"New York"},{"opponent":"Scotland","city":"Boston"},{"opponent":"Haiti","city":"Atlanta"}],"probs":{"1st":0.3,"2nd":0.4,"3rd":0.22,"4th":0.08},"gs_km":3044,"if_1st_km":13478,"if_2nd_km":18432,"if_3rd_km":13408,"if_3rd_min_km":8972,"if_3rd_max_km":22182,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"]],"expected_km":13857,"max_km":22182,"min_km":3044,"knockout_path":{"as_1st":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[8972,9070,22182],"code":"MA","flagHtml":"<span class=\"fi fi-ma\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ecuador","flag":"🇪🇨","group":"E","base_camp":"Columbus OH","base_coords":[39.9612,-82.9988],"group_fixtures":[{"opponent":"Ivory Coast","city":"Philadelphia"},{"opponent":"Curaçao","city":"Kansas City"},{"opponent":"Germany","city":"New York"}],"probs":{"1st":0.2,"2nd":0.32,"3rd":0.3,"4th":0.18},"gs_km":4838,"if_1st_km":14730,"if_2nd_km":15426,"if_3rd_km":21896,"if_3rd_min_km":14730,"if_3rd_max_km":28910,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":13633,"max_km":28910,"min_km":4838,"knockout_path":{"as_1st":{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[14730,21934,17828,28910,28638,22922,18312],"code":"EC","flagHtml":"<span class=\"fi fi-ec\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ghana","flag":"🇬🇭","group":"L","base_camp":"Smithfield RI","base_coords":[41.9001,-71.5523],"group_fixtures":[{"opponent":"Panama","city":"Toronto"},{"opponent":"England","city":"Boston"},{"opponent":"Croatia","city":"Philadelphia"}],"probs":{"1st":0.13,"2nd":0.22,"3rd":0.33,"4th":0.32},"gs_km":2156,"if_1st_km":19510,"if_2nd_km":22118,"if_3rd_km":20452,"if_3rd_min_km":19510,"if_3rd_max_km":21394,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":12849,"max_km":22118,"min_km":2156,"knockout_path":{"as_1st":{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[19510,21394],"code":"GH","flagHtml":"<span class=\"fi fi-gh\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Uzbekistan","flag":"🇺🇿","group":"K","base_camp":"Marietta GA","base_coords":[33.9526,-84.5499],"group_fixtures":[{"opponent":"Colombia","city":"Mexico City"},{"opponent":"Portugal","city":"Houston"},{"opponent":"DR Congo","city":"Atlanta"}],"probs":{"1st":0.08,"2nd":0.18,"3rd":0.25,"4th":0.49},"gs_km":6640,"if_1st_km":20452,"if_2nd_km":22246,"if_3rd_km":17941,"if_3rd_min_km":15430,"if_3rd_max_km":20452,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":12447,"max_km":22246,"min_km":6640,"knockout_path":{"as_1st":{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[15430,20452],"code":"UZ","flagHtml":"<span class=\"fi fi-uz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Sweden","flag":"🇸🇪","group":"F","base_camp":"Frisco TX","base_coords":[33.1581,-96.8236],"group_fixtures":[{"opponent":"Tunisia","city":"Monterrey"},{"opponent":"Netherlands","city":"Houston"},{"opponent":"Japan","city":"Dallas"}],"probs":{"1st":0.2,"2nd":0.22,"3rd":0.3,"4th":0.28},"gs_km":2716,"if_1st_km":14696,"if_2nd_km":18158,"if_3rd_km":21026,"if_3rd_min_km":19144,"if_3rd_max_km":22012,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":12190,"max_km":22012,"min_km":2716,"knockout_path":{"as_1st":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[21118,21708,19144,21150,22012],"code":"SE","flagHtml":"<span class=\"fi fi-se\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Scotland","flag":"🏴󠁧󠁢󠁳󠁣󠁴󠁿","group":"C","base_camp":"Charlotte NC","base_coords":[35.2271,-80.8431],"group_fixtures":[{"opponent":"Haiti","city":"Boston"},{"opponent":"Morocco","city":"Boston"},{"opponent":"Brazil","city":"Miami"}],"probs":{"1st":0.12,"2nd":0.13,"3rd":0.31,"4th":0.44},"gs_km":6572,"if_1st_km":15792,"if_2nd_km":20862,"if_3rd_km":17641,"if_3rd_min_km":14514,"if_3rd_max_km":21126,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"]],"expected_km":11835,"max_km":21126,"min_km":6572,"knockout_path":{"as_1st":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[17282,14514,21126],"code":"SC","flagHtml":"<span class=\"fi fi-gb-sct\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"France","flag":"🇫🇷","group":"I","base_camp":"Waltham MA","base_coords":[42.3765,-71.2356],"group_fixtures":[{"opponent":"Senegal","city":"New York"},{"opponent":"Iraq","city":"Philadelphia"},{"opponent":"Norway","city":"Boston"}],"probs":{"1st":0.6,"2nd":0.28,"3rd":0.09,"4th":0.03},"gs_km":1508,"if_1st_km":10262,"if_2nd_km":14686,"if_3rd_km":21372,"if_3rd_min_km":8090,"if_3rd_max_km":31996,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":11648,"max_km":31996,"min_km":1508,"knockout_path":{"as_1st":{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[8090,10262,23710,19392,31996,31370,25102,21058],"code":"FR","flagHtml":"<span class=\"fi fi-fr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Tunisia","flag":"🇹🇳","group":"F","base_camp":"Monterrey MX","base_coords":[25.6866,-100.3161],"group_fixtures":[{"opponent":"Sweden","city":"Monterrey"},{"opponent":"Japan","city":"Monterrey"},{"opponent":"Netherlands","city":"Kansas City"}],"probs":{"1st":0.1,"2nd":0.13,"3rd":0.27,"4th":0.5},"gs_km":3166,"if_1st_km":18494,"if_2nd_km":23826,"if_3rd_km":26342,"if_3rd_min_km":19448,"if_3rd_max_km":29252,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":11577,"max_km":29252,"min_km":3166,"knockout_path":{"as_1st":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[29252,28404,19448,25722,28886],"code":"TN","flagHtml":"<span class=\"fi fi-tn\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Norway","flag":"🇳🇴","group":"I","base_camp":"Greensboro NC","base_coords":[36.0726,-79.792],"group_fixtures":[{"opponent":"Iraq","city":"Boston"},{"opponent":"Senegal","city":"New York"},{"opponent":"France","city":"Boston"}],"probs":{"1st":0.12,"2nd":0.22,"3rd":0.26,"4th":0.4},"gs_km":5426,"if_1st_km":13012,"if_2nd_km":14816,"if_3rd_km":21948,"if_3rd_min_km":13012,"if_3rd_max_km":31962,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":11280,"max_km":31962,"min_km":5426,"knockout_path":{"as_1st":{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[15282,13012,20688,16386,31962,31894,25616,20744],"code":"NO","flagHtml":"<span class=\"fi fi-no\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Cape Verde","flag":"🇨🇻","group":"H","base_camp":"Tampa FL","base_coords":[27.9506,-82.4572],"group_fixtures":[{"opponent":"Spain","city":"Atlanta"},{"opponent":"Uruguay","city":"Miami"},{"opponent":"Saudi Arabia","city":"Houston"}],"probs":{"1st":0.08,"2nd":0.15,"3rd":0.3,"4th":0.47},"gs_km":4520,"if_1st_km":27624,"if_2nd_km":14396,"if_3rd_km":20657,"if_3rd_min_km":14958,"if_3rd_max_km":33954,"if_3rd_paths":[["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"]],"expected_km":11093,"max_km":33954,"min_km":4520,"knockout_path":{"as_1st":{"R32":"Los Angeles","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Miami","R16":"Atlanta","QF":"Kansas City","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"}]},"if_3rd_paths_km":[16220,17496,14958,33954],"code":"CV","flagHtml":"<span class=\"fi fi-cv\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Iraq","flag":"🇮🇶","group":"I","base_camp":"White Sulphur Springs WV","base_coords":[37.7979,-80.3023],"group_fixtures":[{"opponent":"Norway","city":"Boston"},{"opponent":"France","city":"Philadelphia"},{"opponent":"Senegal","city":"Toronto"}],"probs":{"1st":0.08,"2nd":0.15,"3rd":0.35,"4th":0.42},"gs_km":4122,"if_1st_km":11712,"if_2nd_km":13692,"if_3rd_km":20345,"if_3rd_min_km":11712,"if_3rd_max_km":29866,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":9969,"max_km":29866,"min_km":4122,"knockout_path":{"as_1st":{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[13258,11712,20128,15820,29866,29694,23522,18762],"code":"IQ","flagHtml":"<span class=\"fi fi-iq\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Senegal","flag":"🇸🇳","group":"I","base_camp":"Piscataway NJ","base_coords":[40.4993,-74.4496],"group_fixtures":[{"opponent":"France","city":"New York"},{"opponent":"Norway","city":"New York"},{"opponent":"Iraq","city":"Toronto"}],"probs":{"1st":0.2,"2nd":0.35,"3rd":0.3,"4th":0.15},"gs_km":1264,"if_1st_km":7266,"if_2nd_km":11550,"if_3rd_km":18759,"if_3rd_min_km":7196,"if_3rd_max_km":29384,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":9581,"max_km":29384,"min_km":1264,"knockout_path":{"as_1st":{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[7196,7266,20338,16022,29384,28924,22640,18304],"code":"SN","flagHtml":"<span class=\"fi fi-sn\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ivory Coast","flag":"🇨🇮","group":"E","base_camp":"Philadelphia PA","base_coords":[39.9526,-75.1652],"group_fixtures":[{"opponent":"Ecuador","city":"Philadelphia"},{"opponent":"Germany","city":"Toronto"},{"opponent":"Curaçao","city":"Philadelphia"}],"probs":{"1st":0.2,"2nd":0.28,"3rd":0.3,"4th":0.22},"gs_km":1104,"if_1st_km":7226,"if_2nd_km":11258,"if_3rd_km":19998,"if_3rd_min_km":7226,"if_3rd_max_km":28986,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"],["Atlanta","Mexico City","Miami","Atlanta","New York"],["San Francisco","Seattle","Los Angeles","Dallas","New York"],["Seattle","Seattle","Los Angeles","Dallas","New York"],["Vancouver","Vancouver","Kansas City","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":8969,"max_km":28986,"min_km":1104,"knockout_path":{"as_1st":{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},"as_2nd":{"R32":"Dallas","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"San Francisco","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Seattle","R16":"Seattle","QF":"Los Angeles","SF":"Dallas","F":"New York"},{"R32":"Vancouver","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[7226,19684,15366,28986,28572,22282,17868],"code":"CI","flagHtml":"<span class=\"fi fi-ci\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Panama","flag":"🇵🇦","group":"L","base_camp":"New Tecumseth ON","base_coords":[44.0753,-79.8428],"group_fixtures":[{"opponent":"Ghana","city":"Toronto"},{"opponent":"Croatia","city":"Toronto"},{"opponent":"England","city":"New York"}],"probs":{"1st":0.1,"2nd":0.16,"3rd":0.28,"4th":0.46},"gs_km":1432,"if_1st_km":18052,"if_2nd_km":17496,"if_3rd_km":17532,"if_3rd_min_km":17012,"if_3rd_max_km":18052,"if_3rd_paths":[["Atlanta","Mexico City","Miami","Atlanta","New York"],["Kansas City","Vancouver","Kansas City","Atlanta","New York"]],"expected_km":8685,"max_km":18052,"min_km":1432,"knockout_path":{"as_1st":{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Toronto","R16":"Dallas","QF":"Los Angeles","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Atlanta","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Kansas City","R16":"Vancouver","QF":"Kansas City","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[18052,17012],"code":"PA","flagHtml":"<span class=\"fi fi-pa\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Haiti","flag":"🇭🇹","group":"C","base_camp":"Galloway NJ","base_coords":[39.4773,-74.4728],"group_fixtures":[{"opponent":"Scotland","city":"Boston"},{"opponent":"Brazil","city":"Philadelphia"},{"opponent":"Morocco","city":"Atlanta"}],"probs":{"1st":0.08,"2nd":0.12,"3rd":0.35,"4th":0.45},"gs_km":3126,"if_1st_km":13500,"if_2nd_km":18634,"if_3rd_km":13559,"if_3rd_min_km":9410,"if_3rd_max_km":21782,"if_3rd_paths":[["Boston","Philadelphia","Boston","Dallas","New York"],["New York","New York","Miami","Atlanta","New York"],["Mexico City","Mexico City","Miami","Atlanta","New York"]],"expected_km":8263,"max_km":21782,"min_km":3126,"knockout_path":{"as_1st":{"R32":"Houston","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},"as_2nd":{"R32":"Monterrey","R16":"Houston","QF":"Boston","SF":"Dallas","F":"New York"},"as_3rd_options":[{"R32":"Boston","R16":"Philadelphia","QF":"Boston","SF":"Dallas","F":"New York"},{"R32":"New York","R16":"New York","QF":"Miami","SF":"Atlanta","F":"New York"},{"R32":"Mexico City","R16":"Mexico City","QF":"Miami","SF":"Atlanta","F":"New York"}]},"if_3rd_paths_km":[9486,9410,21782],"code":"HT","flagHtml":"<span class=\"fi fi-ht\" style=\"border-radius:2px;font-size:16px\"></span>"}],"venue_coords":{"Mexico City":[19.4326,-99.1332],"Guadalajara":[20.6597,-103.3496],"Monterrey":[25.6866,-100.3161],"Los Angeles":[34.0143,-118.2912],"Seattle":[47.5952,-122.3316],"San Francisco":[37.4031,-121.9694],"Vancouver":[49.2769,-123.112],"Toronto":[43.6332,-79.4194],"Kansas City":[39.0489,-94.4839],"Dallas":[32.7473,-97.0945],"Houston":[29.6847,-95.4107],"Atlanta":[33.7554,-84.4009],"New York":[40.8136,-74.0744],"Philadelphia":[39.9008,-75.1675],"Miami":[25.958,-80.2389],"Boston":[42.0909,-71.2643]}};
+const TEAMS=RAW.teams, VENUES=RAW.venue_coords;
+const MAP_W=430,MAP_H=290;
+const LON_MIN=-130,LON_MAX=-60,LAT_MIN=14,LAT_MAX=55;
+
+function proj(lat,lon){
+  return [((lon-LON_MIN)/(LON_MAX-LON_MIN))*MAP_W,
+          MAP_H-((lat-LAT_MIN)/(LAT_MAX-LAT_MIN))*MAP_H];
+}
+function fmtK(km){
+  if(unitMiles){const mi=Math.round(km*KM_TO_MI);return mi>=1000?(mi/1000).toFixed(1)+'k mi':mi.toLocaleString()+' mi';}
+  return km>=1000?(km/1000).toFixed(1)+'k km':km.toLocaleString()+' km';
+}
+function fmt(km){
+  if(unitMiles) return Math.round(km*KM_TO_MI).toLocaleString()+' mi';
+  return km.toLocaleString()+' km';
+}
+function gc(city){
+  for(const[k,v]of Object.entries(VENUES))
+    if(k.toLowerCase().includes(city.toLowerCase())||city.toLowerCase().includes(k.toLowerCase()))return v;
+  return null;
+}
+
+let sortMode='expected',searchTerm='',selectedTeam=null,selectedPath=null,unitMiles=false;
+const KM_TO_MI=0.621371;
+const GLOBAL_MAX=Math.max(...TEAMS.map(t=>t.max_km));
+
+function getSorted(){
+  let arr=[...TEAMS];
+  if(searchTerm){const s=searchTerm.toLowerCase();arr=arr.filter(t=>t.team.toLowerCase().includes(s)||t.base_camp.toLowerCase().includes(s)||t.group.toLowerCase().includes(s))}
+  if(sortMode==='expected')arr.sort((a,b)=>b.expected_km-a.expected_km);
+  else if(sortMode==='max')arr.sort((a,b)=>b.max_km-a.max_km);
+  else if(sortMode==='gs')arr.sort((a,b)=>b.gs_km-a.gs_km);
+  else arr.sort((a,b)=>a.team.localeCompare(b.team));
+  return arr;
+}
+
+function primaryKm(t){
+  if(sortMode==='max')return t.max_km;
+  if(sortMode==='gs')return t.gs_km;
+  return t.expected_km;
+}
+function primaryLabel(){
+  if(sortMode==='max')return'max';
+  if(sortMode==='gs')return'group stage';
+  return'expected';
+}
+
+function toggleUnit(){
+  unitMiles=!unitMiles;
+  document.getElementById('unitToggle').textContent=unitMiles?'Switch to km':'Switch to miles';
+  renderChart();
+  // Re-render detail panel if a team is selected
+  if(selectedTeam) renderDetail(selectedTeam);
+  if(selectedTeam&&selectedPath) renderMap(selectedTeam,selectedPath);
+}
+
+function renderChart(){
+  const body=document.getElementById('chartBody');
+  const sorted=getSorted();
+  document.getElementById('teamCount').textContent=sorted.length+' teams';
+  body.innerHTML='';
+  sorted.forEach((t,i)=>{
+    const row=document.createElement('div');
+    row.className='team-row'+(selectedTeam?.team===t.team?' selected':'');
+    const gsPct=(t.gs_km/GLOBAL_MAX)*100;
+    const rangeLeft=(t.min_km/GLOBAL_MAX)*100;
+    const rangeW=((t.max_km-t.min_km)/GLOBAL_MAX)*100;
+    const expPct=(t.expected_km/GLOBAL_MAX)*100;
+    row.innerHTML=`
+      <div class="row-rank">${i+1}</div>
+      <div class="row-team"><span class="row-flag">${t.flagHtml}</span><div><div class="row-name">${t.team}</div><div class="row-group"><span class="row-code">${t.code}</span> GRP ${t.group}</div></div></div>
+      <div class="bar-track">
+        <div class="bar-bg"></div>
+        <div class="bar-range" style="left:${rangeLeft}%;width:${rangeW}%"></div>
+        <div class="bar-gs" style="width:${gsPct}%"></div>
+        <div class="bar-expected" style="left:${expPct}%"></div>
+      </div>
+      <div class="row-km">${fmtK(primaryKm(t))}<span>${sortMode==='expected'?'<span class=\'has-tip\' style=\'border-bottom:1px dotted var(--muted)\'>expected<span class=\'tip\' style=\'width:190px\'>Weighted average across all possible finishing positions — not a single real journey.</span></span>':primaryLabel()}</span></div>`;
+    row.addEventListener('click',()=>selectTeam(t));
+    body.appendChild(row);
+  });
+}
+
+// PATH STORE: avoids JSON.stringify in onclick attrs
+// Populated by renderDetail, keyed by team name + path key
+const PATH_STORE={};
+
+function selectTeam(t){
+  selectedTeam=t;
+  renderChart();
+  renderDetail(t);
+  // default to 1st place path
+  const key=t.team+'|1st|0';
+  if(PATH_STORE[key]) selectPath(key);
+}
+
+function selectPath(key){
+  const spec=PATH_STORE[key];
+  if(!spec)return;
+  selectedPath=spec;
+  renderMap(spec.team,spec);
+  document.querySelectorAll('.path-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.pathKey===key);
+  });
+}
+
+function renderMap(t,pathSpec){
+  const ph=document.getElementById('mapPlaceholder');
+  const cv=document.getElementById('mapCanvas');
+  ph.style.display='none';cv.style.display='block';
+  const dpr=window.devicePixelRatio||1;
+  cv.width=MAP_W*dpr;cv.height=MAP_H*dpr;
+  cv.style.width=MAP_W+'px';cv.style.height=MAP_H+'px';
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.fillStyle='#0d1a24';ctx.fillRect(0,0,MAP_W,MAP_H);
+  drawLand(ctx);
+
+  // Faint background venue dots
+  for(const[,v]of Object.entries(VENUES)){
+    const[x,y]=proj(v[0],v[1]);
+    ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fill();
+  }
+
+  const base=t.base_coords;
+  const[bx,by]=proj(base[0],base[1]);
+  const ROUNDS=['R32','R16','QF','SF','F'];
+  const pathColor=pathSpec.type==='1st'?'#00d4aa':pathSpec.type==='2nd'?'#f0c040':'#ff6b35';
+
+  // Draw route: base→stop1→base→stop2→base→... (return to base between each game)
+  // Group stage cities first (solid, blue)
+  const gsStops=[...new Set(t.group_fixtures.map(f=>f.city))];
+  gsStops.forEach(city=>{
+    const vc=gc(city);if(!vc)return;
+    const[vx,vy]=proj(vc[0],vc[1]);
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(vx,vy);
+    ctx.strokeStyle='rgba(74,158,255,0.7)';ctx.lineWidth=1.8;ctx.setLineDash([]);ctx.stroke();
+  });
+
+  // Knockout route: draw as sequential path with return legs shown
+  const koPath=pathSpec.path;
+  if(koPath){
+    const stops=ROUNDS.map(r=>koPath[r]).filter(Boolean);
+    const uniqueStops=[...new Set(stops)]; // deduplicate same-city rounds
+
+    // Draw each leg as base→venue return trip (dashed in path colour)
+    uniqueStops.forEach(city=>{
+      const vc=gc(city);if(!vc)return;
+      const[vx,vy]=proj(vc[0],vc[1]);
+      ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(vx,vy);
+      ctx.strokeStyle=pathColor;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.globalAlpha=0.85;ctx.stroke();
+      ctx.globalAlpha=1;
+    });
+
+    // Draw round labels on venue dots along the path
+    const roundLabels={R32:'R32',R16:'R16',QF:'QF',SF:'SF',F:'Final'};
+    const seenForLabel=new Set();
+    ROUNDS.forEach(r=>{
+      const city=koPath[r];if(!city)return;
+      const vc=gc(city);if(!vc)return;
+      const[vx,vy]=proj(vc[0],vc[1]);
+      // Collect all rounds at this city
+      if(!seenForLabel.has(city)){
+        seenForLabel.add(city);
+        const roundsHere=ROUNDS.filter(rr=>koPath[rr]===city).map(rr=>roundLabels[rr]).join('/');
+        // Venue circle
+        ctx.beginPath();ctx.arc(vx,vy,5,0,Math.PI*2);
+        ctx.fillStyle='#0d1a24';ctx.fill();
+        ctx.strokeStyle=pathColor;ctx.lineWidth=1.5;ctx.setLineDash([]);ctx.stroke();
+        // Round label above dot
+        ctx.fillStyle=pathColor;ctx.font='bold 8px Barlow Condensed,sans-serif';
+        ctx.textAlign='center';
+        ctx.fillText(roundsHere,vx,vy-8);
+        // City name below
+        ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='8px Barlow,sans-serif';
+        ctx.fillText(city,vx,vy+16);
+        ctx.textAlign='left';
+      }
+    });
+  }
+
+  // Group stage venue dots (drawn after lines so they sit on top)
+  gsStops.forEach(city=>{
+    const vc=gc(city);if(!vc)return;
+    const[vx,vy]=proj(vc[0],vc[1]);
+    ctx.beginPath();ctx.arc(vx,vy,4,0,Math.PI*2);
+    ctx.fillStyle='#0d1a24';ctx.fill();
+    ctx.strokeStyle='rgba(74,158,255,0.8)';ctx.lineWidth=1.5;ctx.setLineDash([]);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.65)';ctx.font='8px Barlow,sans-serif';
+    ctx.textAlign='left';
+    ctx.fillText(city,vx+6,vy+3);
+  });
+
+  // Base camp dot (always on top)
+  ctx.beginPath();ctx.arc(bx,by,6,0,Math.PI*2);
+  ctx.fillStyle='#00d4aa';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#00d4aa';ctx.font='bold 9px Barlow Condensed,sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('BASE',bx+9,by+4);
+
+  // Legend
+  ctx.setLineDash([]);
+  const legItems=[
+    {col:'rgba(74,158,255,.8)',dash:[],lbl:'Group stage'},
+    {col:pathColor,dash:[5,4],lbl:pathSpec.label+' route'},
+  ];
+  let ly=MAP_H-28;
+  legItems.forEach(l=>{
+    ctx.beginPath();ctx.strokeStyle=l.col;ctx.lineWidth=1.5;
+    ctx.setLineDash(l.dash);
+    ctx.moveTo(10,ly);ctx.lineTo(28,ly);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='8px Barlow,sans-serif';
+    ctx.fillText(l.lbl,32,ly+3);ly+=13;
+  });
+}
+
+function drawLand(ctx){
+  ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.lineWidth=1;ctx.setLineDash([]);
+  [
+    [[-124.8,49],[-110,49],[-100,49],[-75,45],[-67,47]],
+    [[-117,32.5],[-111,31.3],[-104.5,29.5],[-99.5,26.5],[-97,26]],
+  ].forEach(pts=>{
+    ctx.beginPath();
+    pts.forEach(([lon,lat],i)=>{const[x,y]=proj(lat,lon);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+    ctx.stroke();
+  });
+}
+
+function renderDetail(t){
+  const el=document.getElementById('teamDetail');
+  el.style.display='block';
+  const p=t.probs;
+  const thirdPaths=t.knockout_path.as_3rd_options||[];
+  const p1path=t.knockout_path.as_1st;
+  const p2path=t.knockout_path.as_2nd;
+  const tn=t.team;
+
+  // Register paths in PATH_STORE with safe string keys
+  const k1=tn+'|1st|0';
+  PATH_STORE[k1]={team:t,type:'1st',path:p1path,km:t.if_1st_km,label:'1st place'};
+  const k2=tn+'|2nd|0';
+  PATH_STORE[k2]={team:t,type:'2nd',path:p2path,km:t.if_2nd_km,label:'2nd place'};
+
+  const uniqueThird=[];
+  const seen3=new Set();
+  thirdPaths.forEach((path,i)=>{
+    const sig=path.R32+'|'+path.R16+'|'+path.QF;
+    if(!seen3.has(sig)){seen3.add(sig);uniqueThird.push({path,i});}
+  });
+  uniqueThird.forEach(({path,i})=>{
+    const k3=tn+'|3rd|'+i;
+    // Use stored per-path KM (computed in Python with same haversine, no divergence)
+    const km=(t.if_3rd_paths_km&&t.if_3rd_paths_km[i]!==undefined)
+      ? t.if_3rd_paths_km[i]
+      : t.if_3rd_km;
+    PATH_STORE[k3]={team:t,type:'3rd',idx:i,path,km,label:'3rd via '+path.R32};
+  });
+
+  const thirdKmLabel=t.if_3rd_min_km!==t.if_3rd_max_km
+    ?fmt(t.if_3rd_min_km)+' – '+fmt(t.if_3rd_max_km)
+    :fmt(t.if_3rd_km);
+
+  // Build HTML using only data-path-key — event listener added after innerHTML set
+  const thirdBtns=uniqueThird.map(({path,i})=>{
+    const k3=tn+'|3rd|'+i;
+    const stored=PATH_STORE[k3];
+    return '<button class="path-btn p3-btn" data-path-key="'+k3+'">via '+path.R32
+      +' <span class="btn-km">'+fmt(stored.km)+'</span></button>';
+  }).join('');
+
+  el.innerHTML=
+    '<div class="detail-name">'+t.flagHtml+' '+t.team+'</div>'
+    +'<div class="detail-base">Base: <strong>'+t.base_camp+'</strong> &middot; Group '+t.group+'</div>'
+    +'<div class="detail-stats">'
+      +'<div class="stat-card"><div class="stat-label">Group stage</div><div class="stat-val blue">'+fmt(t.gs_km)+'</div></div>'
+      +'<div class="stat-card"><div class="stat-label has-tip">Expected total<span class="tip">A probability-weighted average across all possible outcomes — not a real journey. It combines each finishing position’s distance weighted by its likelihood, so teams with high odds of going deep score higher.</span></div><div class="stat-val accent">'+fmt(t.expected_km)+'</div></div>'
+      +'<div class="stat-card"><div class="stat-label">Maximum possible</div><div class="stat-val gold">'+fmt(t.max_km)+'</div></div>'
+    +'</div>'
+    +'<div class="path-selector-label">Show route on map:</div>'
+    +'<div class="path-selector">'
+      +'<button class="path-btn p1-btn" data-path-key="'+k1+'">'
+        +'<span class="btn-label">1st place</span>'
+        +'<span class="btn-km">'+fmt(t.if_1st_km)+'</span>'
+        +'<span class="btn-prob">'+Math.round(p['1st']*100)+'%</span>'
+      +'</button>'
+      +'<button class="path-btn p2-btn" data-path-key="'+k2+'">'
+        +'<span class="btn-label">2nd place</span>'
+        +'<span class="btn-km">'+fmt(t.if_2nd_km)+'</span>'
+        +'<span class="btn-prob">'+Math.round(p['2nd']*100)+'%</span>'
+      +'</button>'
+      +'<div class="third-place-group">'
+        +'<div class="third-label-row">'
+          +'<span class="btn-label-plain">3rd place</span>'
+          +'<span class="btn-prob-plain">'+Math.round(p['3rd']*100)+'%</span>'
+          +'<span class="btn-km-plain">'+thirdKmLabel+'</span>'
+        +'</div>'
+        +'<div class="third-btns">'+thirdBtns+'</div>'
+      +'</div>'
+    +'</div>';
+
+  // Wire click handlers via event delegation — no inline onclick needed
+  el.querySelectorAll('.path-btn').forEach((btn,i)=>{
+    if(i===0) btn.classList.add('active');
+    btn.addEventListener('click',()=>selectPath(btn.dataset.pathKey));
+  });
+}
+
+function haversine(a,b){
+  const R=6371,toR=x=>x*Math.PI/180;
+  const dlat=toR(b[0]-a[0]),dlon=toR(b[1]-a[1]);
+  const h=Math.sin(dlat/2)**2+Math.cos(toR(a[0]))*Math.cos(toR(b[0]))*Math.sin(dlon/2)**2;
+  return Math.round(2*R*Math.asin(Math.sqrt(h)));
+}
+
+document.querySelectorAll('.sort-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    sortMode=btn.dataset.sort;
+    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');renderChart();
+  });
+});
+document.getElementById('searchInput').addEventListener('input',e=>{searchTerm=e.target.value.trim();renderChart()});
+
+renderChart();
+setTimeout(()=>{
+  const t=TEAMS.find(t=>t.team==='Canada');
+  if(t)selectTeam(t);
+},400);
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Did Teams Pick the Right Base Camp? · World Cup 2026 Travel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.2.3/css/flag-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0d0f;--surface:#111518;--surface2:#181d22;--border:rgba(255,255,255,0.07);
+  --text:#e8eaec;--muted:#6b7580;--accent:#00d4aa;--gold:#f0c040;--red:#ff5555;--blue:#4a9eff;
+}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.5;min-height:100vh}
+
+/* ── Site nav ── */
+.site-nav{
+  background:#070a0c;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;
+  align-items:center;
+  padding:0 2rem;
+  height:44px;
+  max-width:100%;
+  position:sticky;
+  top:0;
+  z-index:200;
+}
+.nav-brand{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
+  text-decoration:none;
+  margin-right:auto;
+}
+.nav-brand span{color:var(--accent)}
+.nav-links{display:flex;gap:2px}
+.nav-link{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:2px;
+  transition:all .15s;
+  border:1px solid transparent;
+}
+.nav-link:hover{color:var(--text);border-color:var(--border)}
+.nav-link.active{
+  color:var(--accent);
+  border-color:rgba(0,212,170,0.3);
+  background:rgba(0,212,170,0.07);
+}
+
+.header{padding:2.5rem 2rem 2rem;max-width:1100px;margin:0 auto;position:relative}
+.header::after{content:'';position:absolute;bottom:0;left:2rem;right:2rem;height:1px;background:linear-gradient(90deg,var(--accent) 0%,transparent 60%)}
+.kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem}
+h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:.95;text-transform:uppercase;letter-spacing:-.02em;margin-bottom:.9rem}
+h1 em{color:var(--accent);font-style:normal}
+.intro{max-width:600px;font-size:.9rem;color:var(--muted);line-height:1.65}
+.intro strong{color:var(--text);font-weight:500}
+
+.controls{max-width:1100px;margin:1.5rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.ctrl-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-right:.25rem}
+.sort-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;border-radius:2px;transition:all .15s}
+.sort-btn:hover{border-color:var(--accent);color:var(--text)}
+.sort-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.unit-btn{background:var(--surface);border:1px solid rgba(255,255,255,0.2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;cursor:pointer;border-radius:2px;transition:all .15s;margin-left:8px}
+.unit-btn:hover{border-color:var(--accent);color:var(--text)}
+
+.main{max-width:1100px;margin:1.25rem auto 0;padding:0 2rem 4rem}
+
+.summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+@media(max-width:700px){.summary-cards{grid-template-columns:repeat(2,1fr)}}
+.s-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.9rem 1rem}
+.s-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-family:'Barlow Condensed',sans-serif}
+.s-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
+.s-val.accent{color:var(--accent)}.s-val.gold{color:var(--gold)}.s-val.red{color:var(--red)}
+.s-sub{font-size:10px;color:var(--muted);margin-top:3px}
+
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.table-header{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px;gap:.5rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);align-items:center}
+.t-row{display:grid;grid-template-columns:28px 150px 1fr 1fr 105px 105px 100px;gap:.5rem;padding:6px 1.25rem;border-bottom:1px solid var(--border);align-items:center;transition:background .1s}
+.t-row:hover{background:var(--surface2)}
+.t-row.perfect{opacity:.4}
+.t-row.egregious{border-left:2px solid var(--red);padding-left:calc(1.25rem - 2px)}
+.t-rank{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);text-align:right}
+.t-team{display:flex;align-items:center;gap:7px;min-width:0}
+.t-flag{flex-shrink:0;display:flex;align-items:center;font-size:15px}
+.t-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-code{font-size:9px;color:var(--muted);letter-spacing:.5px}
+.t-base{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-base.actual{color:var(--text)}
+.t-base.optimal{color:var(--accent)}
+.t-num{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;text-align:right;white-space:nowrap}
+.t-pct{font-size:10px;color:var(--muted);margin-top:1px;text-align:right}
+.badge-optimal{display:inline-block;background:rgba(0,212,170,.12);color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:2px;text-transform:uppercase}
+.saving-bar-wrap{height:3px;background:#1e2830;border-radius:2px;margin-top:4px}
+.saving-bar{height:3px;border-radius:2px}
+
+.footnote{max-width:1100px;margin:0 auto;padding:0 2rem 3rem;font-size:10px;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-brand" href="index.html">World Cup 2026 <span>Travel</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="travelmost.html">Who travels most?</a>
+    <a class="nav-link active" href="rightcamp.html">Right base camp?</a>
+  </div>
+</nav>
+
+<header class="header">
+  <div class="kicker">The Unanswered Question · World Cup 2026</div>
+  <h1>Did teams pick the<br><em>right</em> base camp?</h1>
+  <p class="intro">
+    FIFA offered 64 approved facilities across North America. Using probability-weighted travel across all possible tournament paths, we calculated the <strong>optimal base camp</strong> for each team from the actual pool of locations chosen — and found some teams left tens of thousands of kilometres on the table.
+  </p>
+</header>
+
+<div class="controls">
+  <span class="ctrl-label">Sort by</span>
+  <button class="sort-btn active" data-sort="saving">Km wasted</button>
+  <button class="sort-btn" data-sort="pct">% wasted</button>
+  <button class="sort-btn" data-sort="dist">Base distance apart</button>
+  <button class="sort-btn" data-sort="alpha">A–Z</button>
+  <button class="unit-btn" id="unitBtn" onclick="toggleUnit()">Switch to miles</button>
+</div>
+
+<div class="main">
+  <div class="summary-cards" id="summaryCards"></div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <div></div>
+      <div>Team</div>
+      <div>Actual base chosen</div>
+      <div>Optimal base</div>
+      <div style="text-align:right">Actual exp.</div>
+      <div style="text-align:right">Optimal exp.</div>
+      <div style="text-align:right">Wasted</div>
+    </div>
+    <div id="tableBody"></div>
+  </div>
+</div>
+
+<div class="footnote">
+  <strong>Methodology:</strong> For each team, expected travel was recalculated placing them at every other team's confirmed base camp. The optimal base is whichever FIFA-approved facility minimises probability-weighted travel across all group fixtures and knockout bracket paths. "Wasted" = expected distance from actual base minus expected from optimal base. Teams already at their optimal location shown at reduced opacity. Distances are great-circle, doubled for each return trip to base.
+</div>
+
+<script>
+const DATA=[{"team":"Austria","code":"AU","group":"J","actual_base":"Santa Barbara CA","actual_coords":[34.4208,-119.6982],"actual_expected":25898,"optimal_base":"Frisco TX","optimal_coords":[33.1581,-96.8236],"optimal_expected":15941,"saving_km":9957,"base_distance_km":2114,"is_optimal":false,"pct_saving":38.4,"flagHtml":"<span class=\"fi fi-at\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Portugal","code":"PO","group":"K","actual_base":"Palm Beach FL","actual_coords":[26.7153,-80.0534],"actual_expected":26375,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":18589,"saving_km":7786,"base_distance_km":1537,"is_optimal":false,"pct_saving":29.5,"flagHtml":"<span class=\"fi fi-pt\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Curaçao","code":"CU","group":"E","actual_base":"Boca Raton FL","actual_coords":[26.3683,-80.1289],"actual_expected":16688,"optimal_base":"Nashville TN","optimal_coords":[36.1627,-86.7816],"optimal_expected":10782,"saving_km":5906,"base_distance_km":1258,"is_optimal":false,"pct_saving":35.4,"flagHtml":"<span class=\"fi fi-cw\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Uruguay","code":"UR","group":"H","actual_base":"Playa del Carmen MX","actual_coords":[20.6296,-87.0739],"actual_expected":22914,"optimal_base":"Tampa FL","optimal_coords":[27.9506,-82.4572],"optimal_expected":17710,"saving_km":5204,"base_distance_km":939,"is_optimal":false,"pct_saving":22.7,"flagHtml":"<span class=\"fi fi-uy\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"England","code":"EN","group":"L","actual_base":"Kansas City MO","actual_coords":[39.0997,-94.5786],"actual_expected":22987,"optimal_base":"Marietta GA","optimal_coords":[33.9526,-84.5499],"optimal_expected":18031,"saving_km":4956,"base_distance_km":1062,"is_optimal":false,"pct_saving":21.6,"flagHtml":"<span class=\"fi fi-gb-eng\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Jordan","code":"JO","group":"J","actual_base":"Portland OR","actual_coords":[45.5051,-122.675],"actual_expected":20186,"optimal_base":"San Jose CA","optimal_coords":[37.3382,-121.8863],"optimal_expected":15368,"saving_km":4818,"base_distance_km":910,"is_optimal":false,"pct_saving":23.9,"flagHtml":"<span class=\"fi fi-jo\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Colombia","code":"CO","group":"K","actual_base":"Guadalajara MX","actual_coords":[20.6597,-103.3496],"actual_expected":24320,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":19585,"saving_km":4735,"base_distance_km":1291,"is_optimal":false,"pct_saving":19.5,"flagHtml":"<span class=\"fi fi-co\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Saudi Arabia","code":"SA","group":"H","actual_base":"Austin TX","actual_coords":[30.2672,-97.7431],"actual_expected":15781,"optimal_base":"Marietta GA","optimal_coords":[33.9526,-84.5499],"optimal_expected":11202,"saving_km":4579,"base_distance_km":1307,"is_optimal":false,"pct_saving":29.0,"flagHtml":"<span class=\"fi fi-sa\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"New Zealand","code":"NE","group":"G","actual_base":"San Diego CA","actual_coords":[32.7157,-117.1611],"actual_expected":19739,"optimal_base":"Renton WA","optimal_coords":[47.4829,-122.2171],"optimal_expected":15170,"saving_km":4569,"base_distance_km":1696,"is_optimal":false,"pct_saving":23.1,"flagHtml":"<span class=\"fi fi-nz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"South Africa","code":"SO","group":"A","actual_base":"Pachuca MX","actual_coords":[20.1011,-98.7591],"actual_expected":21654,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":17598,"saving_km":4056,"base_distance_km":1127,"is_optimal":false,"pct_saving":18.7,"flagHtml":"<span class=\"fi fi-za\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Japan","code":"JA","group":"F","actual_base":"Nashville TN","actual_coords":[36.1627,-86.7816],"actual_expected":16846,"optimal_base":"Mansfield TX","optimal_coords":[32.5632,-97.1417],"optimal_expected":12893,"saving_km":3953,"base_distance_km":1031,"is_optimal":false,"pct_saving":23.5,"flagHtml":"<span class=\"fi fi-jp\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Norway","code":"NO","group":"I","actual_base":"Greensboro NC","actual_coords":[36.0726,-79.792],"actual_expected":11280,"optimal_base":"Basking Ridge NJ","optimal_coords":[40.7068,-74.5712],"optimal_expected":7384,"saving_km":3896,"base_distance_km":687,"is_optimal":false,"pct_saving":34.5,"flagHtml":"<span class=\"fi fi-no\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Qatar","code":"QA","group":"B","actual_base":"Santa Barbara CA","actual_coords":[34.4208,-119.6982],"actual_expected":16809,"optimal_base":"Renton WA","optimal_coords":[47.4829,-122.2171],"optimal_expected":12944,"saving_km":3865,"base_distance_km":1468,"is_optimal":false,"pct_saving":23.0,"flagHtml":"<span class=\"fi fi-qa\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"France","code":"FR","group":"I","actual_base":"Waltham MA","actual_coords":[42.3765,-71.2356],"actual_expected":11648,"optimal_base":"Piscataway NJ","optimal_coords":[40.4993,-74.4496],"optimal_expected":8450,"saving_km":3198,"base_distance_km":340,"is_optimal":false,"pct_saving":27.5,"flagHtml":"<span class=\"fi fi-fr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Germany","code":"GE","group":"E","actual_base":"Winston-Salem NC","actual_coords":[36.0999,-80.2442],"actual_expected":15828,"optimal_base":"Basking Ridge NJ","optimal_coords":[40.7068,-74.5712],"optimal_expected":13243,"saving_km":2585,"base_distance_km":712,"is_optimal":false,"pct_saving":16.3,"flagHtml":"<span class=\"fi fi-de\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Iran","code":"IR","group":"G","actual_base":"Tucson AZ","actual_coords":[32.2226,-110.9747],"actual_expected":18351,"optimal_base":"Irvine CA","optimal_coords":[33.6846,-117.8265],"optimal_expected":16181,"saving_km":2170,"base_distance_km":660,"is_optimal":false,"pct_saving":11.8,"flagHtml":"<span class=\"fi fi-ir\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Netherlands","code":"NE","group":"F","actual_base":"Kansas City MO","actual_coords":[39.0997,-94.5786],"actual_expected":17083,"optimal_base":"Frisco TX","optimal_coords":[33.1581,-96.8236],"optimal_expected":14934,"saving_km":2149,"base_distance_km":691,"is_optimal":false,"pct_saving":12.6,"flagHtml":"<span class=\"fi fi-nl\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Iraq","code":"IR","group":"I","actual_base":"White Sulphur Springs WV","actual_coords":[37.7979,-80.3023],"actual_expected":9969,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":7977,"saving_km":1992,"base_distance_km":505,"is_optimal":false,"pct_saving":20.0,"flagHtml":"<span class=\"fi fi-iq\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ghana","code":"GH","group":"L","actual_base":"Smithfield RI","actual_coords":[41.9001,-71.5523],"actual_expected":12849,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":11034,"saving_km":1815,"base_distance_km":373,"is_optimal":false,"pct_saving":14.1,"flagHtml":"<span class=\"fi fi-gh\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Türkiye","code":"TÜ","group":"D","actual_base":"Mesa AZ","actual_coords":[33.4152,-111.8315],"actual_expected":16784,"optimal_base":"San Jose CA","optimal_coords":[37.3382,-121.8863],"optimal_expected":14989,"saving_km":1795,"base_distance_km":1010,"is_optimal":false,"pct_saving":10.7,"flagHtml":"<span class=\"fi fi-tr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Australia","code":"AU","group":"D","actual_base":"Alameda CA","actual_coords":[37.7652,-122.2416],"actual_expected":21115,"optimal_base":"Renton WA","optimal_coords":[47.4829,-122.2171],"optimal_expected":19333,"saving_km":1782,"base_distance_km":1081,"is_optimal":false,"pct_saving":8.4,"flagHtml":"<span class=\"fi fi-au\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ecuador","code":"EC","group":"E","actual_base":"Columbus OH","actual_coords":[39.9612,-82.9988],"actual_expected":13633,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":11863,"saving_km":1770,"base_distance_km":667,"is_optimal":false,"pct_saving":13.0,"flagHtml":"<span class=\"fi fi-ec\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Scotland","code":"SC","group":"C","actual_base":"Charlotte NC","actual_coords":[35.2271,-80.8431],"actual_expected":11835,"optimal_base":"Piscataway NJ","optimal_coords":[40.4993,-74.4496],"optimal_expected":10084,"saving_km":1751,"base_distance_km":811,"is_optimal":false,"pct_saving":14.8,"flagHtml":"<span class=\"fi fi-gb-sct\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Switzerland","code":"SW","group":"B","actual_base":"San Diego CA","actual_coords":[32.7157,-117.1611],"actual_expected":20943,"optimal_base":"Sandy UT","optimal_coords":[40.5649,-111.8389],"optimal_expected":19209,"saving_km":1734,"base_distance_km":993,"is_optimal":false,"pct_saving":8.3,"flagHtml":"<span class=\"fi fi-ch\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Cape Verde","code":"CA","group":"H","actual_base":"Tampa FL","actual_coords":[27.9506,-82.4572],"actual_expected":11093,"optimal_base":"Marietta GA","optimal_coords":[33.9526,-84.5499],"optimal_expected":9626,"saving_km":1467,"base_distance_km":697,"is_optimal":false,"pct_saving":13.2,"flagHtml":"<span class=\"fi fi-cv\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"South Korea","code":"SO","group":"A","actual_base":"Guadalajara MX","actual_coords":[20.6597,-103.3496],"actual_expected":16427,"optimal_base":"Monterrey MX","optimal_coords":[25.6866,-100.3161],"optimal_expected":15074,"saving_km":1353,"base_distance_km":639,"is_optimal":false,"pct_saving":8.2,"flagHtml":"<span class=\"fi fi-kr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Canada","code":"CA","group":"B","actual_base":"Vancouver BC","actual_coords":[49.2827,-123.1207],"actual_expected":27394,"optimal_base":"Lawrence KS","optimal_coords":[38.9717,-95.2353],"optimal_expected":26266,"saving_km":1128,"base_distance_km":2484,"is_optimal":false,"pct_saving":4.1,"flagHtml":"<span class=\"fi fi-ca\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Uzbekistan","code":"UZ","group":"K","actual_base":"Marietta GA","actual_coords":[33.9526,-84.5499],"actual_expected":12447,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":11387,"saving_km":1060,"base_distance_km":1122,"is_optimal":false,"pct_saving":8.5,"flagHtml":"<span class=\"fi fi-uz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Croatia","code":"CR","group":"L","actual_base":"Alexandria VA","actual_coords":[38.8048,-77.0469],"actual_expected":16425,"optimal_base":"Columbus OH","optimal_coords":[39.9612,-82.9988],"optimal_expected":15430,"saving_km":995,"base_distance_km":527,"is_optimal":false,"pct_saving":6.1,"flagHtml":"<span class=\"fi fi-hr\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Argentina","code":"AR","group":"J","actual_base":"Kansas City MO","actual_coords":[39.0997,-94.5786],"actual_expected":15252,"optimal_base":"Frisco TX","optimal_coords":[33.1581,-96.8236],"optimal_expected":14299,"saving_km":953,"base_distance_km":691,"is_optimal":false,"pct_saving":6.2,"flagHtml":"<span class=\"fi fi-ar\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Egypt","code":"EG","group":"G","actual_base":"Spokane WA","actual_coords":[47.6588,-117.426],"actual_expected":17634,"optimal_base":"Renton WA","optimal_coords":[47.4829,-122.2171],"optimal_expected":16742,"saving_km":892,"base_distance_km":360,"is_optimal":false,"pct_saving":5.1,"flagHtml":"<span class=\"fi fi-eg\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Czechia","code":"CZ","group":"A","actual_base":"Mansfield TX","actual_coords":[32.5632,-97.1417],"actual_expected":15739,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":14891,"saving_km":848,"base_distance_km":354,"is_optimal":false,"pct_saving":5.4,"flagHtml":"<span class=\"fi fi-cz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Sweden","code":"SW","group":"F","actual_base":"Frisco TX","actual_coords":[33.1581,-96.8236],"actual_expected":12190,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":11494,"saving_km":696,"base_distance_km":402,"is_optimal":false,"pct_saving":5.7,"flagHtml":"<span class=\"fi fi-se\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Spain","code":"SP","group":"H","actual_base":"Chattanooga TN","actual_coords":[35.0456,-85.3097],"actual_expected":18884,"optimal_base":"Marietta GA","optimal_coords":[33.9526,-84.5499],"optimal_expected":18454,"saving_km":430,"base_distance_km":140,"is_optimal":false,"pct_saving":2.3,"flagHtml":"<span class=\"fi fi-es\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Brazil","code":"BR","group":"C","actual_base":"Basking Ridge NJ","actual_coords":[40.7068,-74.5712],"actual_expected":15170,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":14830,"saving_km":340,"base_distance_km":98,"is_optimal":false,"pct_saving":2.2,"flagHtml":"<span class=\"fi fi-br\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Tunisia","code":"TU","group":"F","actual_base":"Monterrey MX","actual_coords":[25.6866,-100.3161],"actual_expected":11577,"optimal_base":"Austin TX","optimal_coords":[30.2672,-97.7431],"optimal_expected":11267,"saving_km":310,"base_distance_km":569,"is_optimal":false,"pct_saving":2.7,"flagHtml":"<span class=\"fi fi-tn\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"USA","code":"US","group":"D","actual_base":"Irvine CA","actual_coords":[33.6846,-117.8265],"actual_expected":23231,"optimal_base":"Sandy UT","optimal_coords":[40.5649,-111.8389],"optimal_expected":22959,"saving_km":272,"base_distance_km":931,"is_optimal":false,"pct_saving":1.2,"flagHtml":"<span class=\"fi fi-us\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Haiti","code":"HA","group":"C","actual_base":"Galloway NJ","actual_coords":[39.4773,-74.4728],"actual_expected":8263,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":8030,"saving_km":233,"base_distance_km":79,"is_optimal":false,"pct_saving":2.8,"flagHtml":"<span class=\"fi fi-ht\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Belgium","code":"BE","group":"G","actual_base":"Renton WA","actual_coords":[47.4829,-122.2171],"actual_expected":23772,"optimal_base":"Sandy UT","optimal_coords":[40.5649,-111.8389],"optimal_expected":23599,"saving_km":173,"base_distance_km":1130,"is_optimal":false,"pct_saving":0.7,"flagHtml":"<span class=\"fi fi-be\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Algeria","code":"AL","group":"J","actual_base":"Lawrence KS","actual_coords":[38.9717,-95.2353],"actual_expected":14326,"optimal_base":"Kansas City MO","optimal_coords":[39.0997,-94.5786],"optimal_expected":14189,"saving_km":137,"base_distance_km":58,"is_optimal":false,"pct_saving":1.0,"flagHtml":"<span class=\"fi fi-dz\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Senegal","code":"SE","group":"I","actual_base":"Piscataway NJ","actual_coords":[40.4993,-74.4496],"actual_expected":9581,"optimal_base":"Basking Ridge NJ","optimal_coords":[40.7068,-74.5712],"optimal_expected":9526,"saving_km":55,"base_distance_km":25,"is_optimal":false,"pct_saving":0.6,"flagHtml":"<span class=\"fi fi-sn\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Morocco","code":"MO","group":"C","actual_base":"Basking Ridge NJ","actual_coords":[40.7068,-74.5712],"actual_expected":13857,"optimal_base":"Piscataway NJ","optimal_coords":[40.4993,-74.4496],"optimal_expected":13854,"saving_km":3,"base_distance_km":25,"is_optimal":false,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-ma\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Bosnia","code":"BO","group":"B","actual_base":"Sandy UT","actual_coords":[40.5649,-111.8389],"actual_expected":23554,"optimal_base":"Sandy UT","optimal_coords":[40.5649,-111.8389],"optimal_expected":23554,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-ba\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Paraguay","code":"PA","group":"D","actual_base":"San Jose CA","actual_coords":[37.3382,-121.8863],"actual_expected":20063,"optimal_base":"San Jose CA","optimal_coords":[37.3382,-121.8863],"optimal_expected":20063,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-py\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Mexico","code":"ME","group":"A","actual_base":"Mexico City","actual_coords":[19.4326,-99.1332],"actual_expected":19317,"optimal_base":"Mexico City","optimal_coords":[19.4326,-99.1332],"optimal_expected":19317,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-mx\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"DR Congo","code":"DR","group":"K","actual_base":"Houston TX","actual_coords":[29.7604,-95.3698],"actual_expected":13872,"optimal_base":"Houston TX","optimal_coords":[29.7604,-95.3698],"optimal_expected":13872,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-cd\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Ivory Coast","code":"IV","group":"E","actual_base":"Philadelphia PA","actual_coords":[39.9526,-75.1652],"actual_expected":8969,"optimal_base":"Philadelphia PA","optimal_coords":[39.9526,-75.1652],"optimal_expected":8969,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-ci\" style=\"border-radius:2px;font-size:16px\"></span>"},{"team":"Panama","code":"PA","group":"L","actual_base":"New Tecumseth ON","actual_coords":[44.0753,-79.8428],"actual_expected":8685,"optimal_base":"New Tecumseth ON","optimal_coords":[44.0753,-79.8428],"optimal_expected":8685,"saving_km":0,"base_distance_km":0,"is_optimal":true,"pct_saving":0.0,"flagHtml":"<span class=\"fi fi-pa\" style=\"border-radius:2px;font-size:16px\"></span>"}];
+const KM_TO_MI=0.621371;
+let sortMode='saving',unitMiles=false;
+const MAX_SAVING=Math.max(...DATA.map(d=>d.saving_km));
+
+function cv(km){return unitMiles?Math.round(km*KM_TO_MI):km}
+function cu(){return unitMiles?'mi':'km'}
+function fmt(km){return cv(km).toLocaleString()+' '+cu()}
+function fmtK(km){const v=cv(km);return v>=1000?(v/1000).toFixed(1)+'k '+cu():v.toLocaleString()+' '+cu()}
+
+function toggleUnit(){
+  unitMiles=!unitMiles;
+  document.getElementById('unitBtn').textContent=unitMiles?'Switch to km':'Switch to miles';
+  render();
+}
+
+function getSorted(){
+  const arr=[...DATA];
+  if(sortMode==='saving') arr.sort((a,b)=>b.saving_km-a.saving_km);
+  else if(sortMode==='pct') arr.sort((a,b)=>b.pct_saving-a.pct_saving);
+  else if(sortMode==='dist') arr.sort((a,b)=>b.base_distance_km-a.base_distance_km);
+  else arr.sort((a,b)=>a.team.localeCompare(b.team));
+  return arr;
+}
+
+function savingColour(km){
+  if(km===0) return 'var(--accent)';
+  if(km>=5000) return 'var(--red)';
+  if(km>=2000) return 'var(--gold)';
+  return 'var(--muted)';
+}
+
+function renderSummary(){
+  const perfect=DATA.filter(d=>d.is_optimal).length;
+  const egregious=DATA.filter(d=>d.saving_km>=5000).length;
+  const totalWasted=DATA.reduce((s,d)=>s+d.saving_km,0);
+  const worst=DATA.reduce((a,b)=>a.saving_km>b.saving_km?a:b);
+  document.getElementById('summaryCards').innerHTML=
+    '<div class="s-card"><div class="s-label">Total distance left on table</div>'
+    +'<div class="s-val red">'+fmtK(totalWasted)+'</div>'
+    +'<div class="s-sub">summed across all 48 teams</div></div>'
+    +'<div class="s-card"><div class="s-label">Biggest offender</div>'
+    +'<div class="s-val gold">'+worst.team+'</div>'
+    +'<div class="s-sub">'+fmtK(worst.saving_km)+' wasted</div></div>'
+    +'<div class="s-card"><div class="s-label">Teams at optimal base</div>'
+    +'<div class="s-val accent">'+perfect+'</div>'
+    +'<div class="s-sub">already in the right place</div></div>'
+    +'<div class="s-card"><div class="s-label">Badly misplaced teams</div>'
+    +'<div class="s-val red">'+egregious+'</div>'
+    +'<div class="s-sub">over 5,000 '+cu()+' wasted</div></div>';
+}
+
+function renderTable(){
+  const sorted=getSorted();
+  const body=document.getElementById('tableBody');
+  body.innerHTML='';
+  sorted.forEach((d,i)=>{
+    const row=document.createElement('div');
+    const egregious=d.saving_km>=5000;
+    const barW=MAX_SAVING>0?(d.saving_km/MAX_SAVING)*100:0;
+    const col=savingColour(d.saving_km);
+    row.className='t-row'+(d.is_optimal?' perfect':'')+(egregious?' egregious':'');
+
+    const optCell=d.is_optimal
+      ?'<span class="badge-optimal">&#10003; optimal</span>'
+      :'<span class="t-base optimal">'+d.optimal_base+'</span>';
+
+    const savCell=d.is_optimal
+      ?'<div class="t-num" style="color:var(--accent)">&#8212;</div>'
+      :'<div class="t-num" style="color:'+col+'">'+fmtK(d.saving_km)+'</div>'
+       +'<div class="t-pct">'+d.pct_saving+'%</div>'
+       +'<div class="saving-bar-wrap"><div class="saving-bar" style="width:'+barW+'%;background:'+col+'"></div></div>';
+
+    row.innerHTML=
+      '<div class="t-rank">'+( i+1)+'</div>'
+      +'<div class="t-team"><span class="t-flag">'+d.flagHtml+'</span>'
+      +'<div><div class="t-name">'+d.team+'</div>'
+      +'<div class="t-code">'+d.code+' GRP '+d.group+'</div></div></div>'
+      +'<div><span class="t-base actual">'+d.actual_base+'</span></div>'
+      +'<div>'+optCell+'</div>'
+      +'<div class="t-num" style="color:var(--muted)">'+fmtK(d.actual_expected)+'</div>'
+      +'<div class="t-num" style="color:var(--accent)">'+fmtK(d.optimal_expected)+'</div>'
+      +'<div>'+savCell+'</div>';
+    body.appendChild(row);
+  });
+}
+
+function render(){renderSummary();renderTable();}
+
+document.querySelectorAll('.sort-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    sortMode=btn.dataset.sort;
+    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
